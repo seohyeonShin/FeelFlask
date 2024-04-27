@@ -1,0 +1,9 @@
+{
+  "type": "탁주",
+  "ingredients": ["정제수", "쌀(국내산)", "기타과당", "소다맛시럽", "물엿"],
+  "alcohol_level": 5,
+  "volume": "770ml",
+  "introduction": "상큼한 레몬바닐라의 맛을 즐길 수 있는 새콤한 맛입니다.",
+  "brewery": "기억브루어리",
+  "homepage": "https://smartstore.naver.com/mapcykorea"
+}
