@@ -1,31 +1,34 @@
 import streamlit as st
 import json
 
-def show():
-  col1, col2 = st.columns(2)
-  with col1:
-    st.image("image0001.png", width=100)
-  with open("image0001.json", "r", encoding="utf-8") as f:
-    file = json.load(f)
-  with col2:
-    st.write("Type:", file["type"])
-    # st.write("Ingredients:", file["ingredients"])
-    st.write("Alcohol Level:", file["alcohol_level"])
-    st.write("Volume:", file["volume"])
-    st.write("Introduction:", file["introduction"])
-    st.write("Brewery:", file["brewery"])
-    st.write("Homepage:", file["homepage"])
+def show(drink, image_path):
+    col1, col2 = st.columns([0.3, 0.7])
+    with col1:
+        # st.image("image0001.png", width=100)
+        st.image(image_path)
+    with btn1:
+        st.button(":thumbsup:")
+    with btn2:
+        st.button(":thumbsdown:")
+    with col2:
+        st.write("name:", drink['name'])
+        st.write("ingredients:", drink['ingredients'])
+        st.write("alcohol_content:", drink['alcohol_content'])
+        st.write("product_introduction:", drink['product_introduction'])
+        st.write("pairing_food:", drink['pairing_food'])
+        st.write("brewery:", drink['brewery'])
+        st.write("website:", drink['website'])
+        st.write("type:", drink['type'])
 
-alcohol_level = st.slider('alcohol level : ', 0, 100, 1)
+st.header('korean traditional liquor recommender', divider='rainbow')
+alcohol_content = st.slider('alcohol level : ', 0, 100, 1)
 sweetness = st.slider('select sweetness you want', 0, 100, 1)
 sour = st.slider('select sour taste you want', 0, 100, 1)
-# st.write('sweetness : ', sweet)
-
 feeling = st.selectbox(
   'How do you feel today?',
   ('very bad', 'bad', 'soso', 'good', 'very good')
 )
-main_ingredient = st.selectbox(
+ingredients = st.selectbox(
   'What main ingredient you want to taste',
   ('rice', 'wheat', 'grape', 'xylitol')
 )
@@ -33,11 +36,18 @@ kind = st.selectbox(
   'the heaviness of alcohol',
   ('very light', 'light', 'heavy', 'very heavy')
 )
-
-
-
-
-clicked = st.button('전통주 찾기!!')
+btn1, btn2, _, pred_btn = st.columns([0.2, 0.2, 0.4, 0.2])
+with pred_btn:
+    clicked = st.button('recommend')
 if clicked:
-  show()
+    ### predict
+
+    ### get drink from mongo db
+
+    ### for debug
+    with open("lib/image0001.json", "r", encoding="utf-8") as f:
+        drink = json.load(f)
+    img = "lib/image0001.png"
+    ### show
+    show(drink, img)
 

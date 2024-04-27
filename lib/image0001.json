@@ -1,0 +1,11 @@
+{
+    "name": "맵시 막걸리 레드라벨",
+    "type": "탁주",
+    "ingredients": ["정제수", "쌀(국내산)", "기타과당", "소다맛시럽", "물엿"],
+    "alcohol_content": 5,
+    "volume": "770ml",
+    "product_introduction": "상큼한 레몬바닐라의 맛을 즐길 수 있는 새콤한 맛입니다.",
+    "pairing_food": ["과일", "각종디저트류"],
+    "brewery": "기억브루어리",
+    "website": "https://smartstore.naver.com/mapcykorea"
+}
