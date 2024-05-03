@@ -1,0 +1,314 @@
+Creme de Cacao (24% ABV)
+Boozy: 80, Sweet: 95, Sour: 20, Bitter: 60, Umami: 30, Salty: 5, Astringent: 40, Perceived Temperature: 65
+Absolut Kurant (40% ABV)
+Boozy: 90, Sweet: 70, Sour: 60, Bitter: 30, Umami: 10, Salty: 5, Astringent: 20, Perceived Temperature: 60
+Lager (4-6% ABV)
+Boozy: 30, Sweet: 20, Sour: 30, Bitter: 40, Umami: 20, Salty: 10, Astringent: 30, Perceived Temperature: 45
+Malibu rum (21% ABV)
+Boozy: 60, Sweet: 90, Sour: 10, Bitter: 5, Umami: 10, Salty: 5, Astringent: 20, Perceived Temperature: 55
+Dark rum (40% ABV)
+Boozy: 90, Sweet: 70, Sour: 20, Bitter: 60, Umami: 40, Salty: 10, Astringent: 50, Perceived Temperature: 75
+Goldschlager (40% ABV)
+Boozy: 85, Sweet: 60, Sour: 10, Bitter: 60, Umami: 20, Salty: 5, Astringent: 70, Perceived Temperature: 70
+151 proof rum (75.5% ABV)
+Boozy: 100, Sweet: 60, Sour: 5, Bitter: 40, Umami: 30, Salty: 5, Astringent: 80, Perceived Temperature: 90
+Jack Daniels (40% ABV)
+Boozy: 95, Sweet: 40, Sour: 20, Bitter: 80, Umami: 60, Salty: 10, Astringent: 70, Perceived Temperature: 80
+Gin (40% ABV)
+Boozy: 90, Sweet: 10, Sour: 50, Bitter: 80, Umami: 10, Salty: 5, Astringent: 60, Perceived Temperature: 70
+Peach Vodka (35% ABV)
+Boozy: 80, Sweet: 80, Sour: 20, Bitter: 10, Umami: 5, Salty: 5, Astringent: 20, Perceived Temperature: 60
+Vanilla vodka (35% ABV)
+Boozy: 75, Sweet: 90, Sour: 5, Bitter: 5, Umami: 30, Salty: 5, Astringent: 10, Perceived Temperature: 60
+Blue Curacao (40% ABV)
+Boozy: 80, Sweet: 90, Sour: 60, Bitter: 40, Umami: 5, Salty: 10, Astringent: 30, Perceived Temperature: 60
+Kahlua (20% ABV)
+Boozy: 60, Sweet: 95, Sour: 10, Bitter: 70, Umami: 80, Salty: 5, Astringent: 40, Perceived Temperature: 70
+Absolut Citron (40% ABV)
+Boozy: 90, Sweet: 40, Sour: 80, Bitter: 20, Umami: 5, Salty: 10, Astringent: 30, Perceived Temperature: 65
+Coconut rum (21% ABV)
+Boozy: 60, Sweet: 90, Sour: 10, Bitter: 5, Umami: 20, Salty: 10, Astringent: 15, Perceived Temperature: 55
+Light rum (40% ABV)
+Boozy: 85, Sweet: 70, Sour: 20, Bitter: 20, Umami: 30, Salty: 10, Astringent: 40, Perceived Temperature: 70
+Vodka (40% ABV)
+Boozy: 90, Sweet: 10, Sour: 5, Bitter: 5, Umami: 5, Salty: 5, Astringent: 20, Perceived Temperature: 60
+Amaretto (28% ABV)
+Boozy: 70, Sweet: 95, Sour: 5, Bitter: 40, Umami: 30, Salty: 5, Astringent: 30, Perceived Temperature: 65
+Cranberry juice (0% ABV)
+Boozy: 0, Sweet: 60, Sour: 70, Bitter: 5, Umami: 5, Salty: 5, Astringent: 20, Perceived Temperature: 40
+Applejack (35% ABV)
+Boozy: 90, Sweet: 60, Sour: 20, Bitter: 40, Umami: 30, Salty: 5, Astringent: 50, Perceived Temperature: 75
+White Creme de Menthe (24% ABV)
+Boozy: 50, Sweet: 95, Sour: 10, Bitter: 40, Umami: 5, Salty: 5, Astringent: 40, Perceived Temperature: 55
+Absolut Vodka (40% ABV)
+Boozy: 90, Sweet: 10, Sour: 5, Bitter: 5, Umami: 5, Salty: 5, Astringent: 20, Perceived Temperature: 60
+Rum (40% ABV)
+Boozy: 85, Sweet: 60, Sour: 10, Bitter: 30, Umami: 40, Salty: 10, Astringent: 50, Perceived Temperature: 75
+Sweet Vermouth (16% ABV)
+Boozy: 45, Sweet: 80, Sour: 40, Bitter: 60, Umami: 50, Salty: 10, Astringent: 50, Perceived Temperature: 60
+Strawberry schnapps (15-20% ABV)
+Boozy: 40, Sweet: 95, Sour: 20, Bitter: 5, Umami: 5, Salty: 5, Astringent: 10, Perceived Temperature: 50
+Scotch (40-60% ABV)
+Boozy: 95, Sweet: 30, Sour: 10, Bitter: 80, Umami: 60, Salty: 10, Astringent: 70, Perceived Temperature: 80
+Apricot brandy (40% ABV)
+Boozy: 85, Sweet: 80, Sour: 30, Bitter: 30, Umami: 40, Salty: 5, Astringent: 40, Perceived Temperature: 70
+Peppermint schnapps (15-30% ABV)
+Boozy: 50, Sweet: 90, Sour: 20, Bitter: 40, Umami: 10, Salty: 5, Astringent: 30, Perceived Temperature: 60
+Triple sec (30-40% ABV)
+Boozy: 80, Sweet: 90, Sour: 40, Bitter: 30, Umami: 10, Salty: 5, Astringent: 20, Perceived Temperature: 65
+Grenadine (20% ABV)
+Boozy: 40, Sweet: 100, Sour: 60, Bitter: 10, Umami: 5, Salty: 5, Astringent: 10, Perceived Temperature: 55
+Southern Comfort (35% ABV)
+Boozy: 85, Sweet: 90, Sour: 10, Bitter: 50, Umami: 40, Salty: 20, Astringent: 30, Perceived Temperature: 70
+Orange bitters (30-45% ABV)
+Boozy: 80, Sweet: 10, Sour: 80, Bitter: 90, Umami: 30, Salty: 20, Astringent: 70, Perceived Temperature: 60
+Lemon vodka (35% ABV)
+Boozy: 80, Sweet: 20, Sour: 90, Bitter: 30, Umami: 10, Salty: 10, Astringent: 40, Perceived Temperature: 60
+Blended whiskey (40% ABV)
+Boozy: 90, Sweet: 40, Sour: 20, Bitter: 70, Umami: 50, Salty: 10, Astringent: 60, Perceived Temperature: 75
+Dry Vermouth (16% ABV)
+Boozy: 50, Sweet: 40, Sour: 60, Bitter: 70, Umami: 40, Salty: 20, Astringent: 60, Perceived Temperature: 55
+Water (0% ABV)
+Boozy: 0, Sweet: 0, Sour: 0, Bitter: 0, Umami: 0, Salty: 0, Astringent: 0, Perceived Temperature: 40
+Sugar (0% ABV)
+Boozy: 0, Sweet: 100, Sour: 0, Bitter: 0, Umami: 0, Salty: 0, Astringent: 0, Perceived Temperature: 50
+Chocolate ice-cream (0% ABV)
+Boozy: 0, Sweet: 100, Sour: 10, Bitter: 70, Umami: 40, Salty: 10, Astringent: 20, Perceived Temperature: 45
+Sour mix (0% ABV)
+Boozy: 0, Sweet: 40, Sour: 100, Bitter: 10, Umami: 5, Salty: 10, Astringent: 20, Perceived Temperature: 45
+Tea (0% ABV)
+Boozy: 0, Sweet: 20, Sour: 30, Bitter: 70, Umami: 40, Salty: 5, Astringent: 50, Perceived Temperature: 90
+Campari (24% ABV)
+Boozy: 70, Sweet: 30, Sour: 70, Bitter: 100, Umami: 30, Salty: 10, Astringent: 80, Perceived Temperature: 60
+Angelica root (0% ABV)
+Boozy: 0, Sweet: 10, Sour: 20, Bitter: 60, Umami: 50, Salty: 5, Astringent: 40, Perceived Temperature: 50
+Orange juice (0% ABV)
+Boozy: 0, Sweet: 80, Sour: 60, Bitter: 10, Umami: 10, Salty: 5, Astringent: 20, Perceived Temperature: 60
+Berries (0% ABV)
+Boozy: 0, Sweet: 70, Sour: 40, Bitter: 10, Umami: 10, Salty: 5, Astringent: 20, Perceived Temperature: 50
+Apple cider (4-8% ABV)
+Boozy: 30, Sweet: 70, Sour: 40, Bitter: 10, Umami: 10, Salty: 5, Astringent: 30, Perceived Temperature: 55
+Tequila (40% ABV)
+Boozy: 95, Sweet: 20, Sour: 20, Bitter: 40, Umami: 30, Salty: 50, Astringent: 60, Perceived Temperature: 80
+Apple juice (0% ABV)
+Boozy: 0, Sweet: 80, Sour: 30, Bitter: 5, Umami: 10, Salty: 5, Astringent: 10, Perceived Temperature: 55
+7-Up (0% ABV)
+Boozy: 0, Sweet: 70, Sour: 40, Bitter: 5, Umami: 5, Salty: 5, Astringent: 5, Perceived Temperature: 50
+Maui (21% ABV)
+Boozy: 60, Sweet: 80, Sour: 20, Bitter: 10, Umami: 30, Salty: 20, Astringent: 20, Perceived Temperature: 60
+Champagne (12-14% ABV)
+Boozy: 50, Sweet: 40, Sour: 50, Bitter: 20, Umami: 10, Salty: 5, Astringent: 40, Perceived Temperature: 55
+Lemonade (0% ABV)
+Boozy: 0, Sweet: 60, Sour: 90, Bitter: 10, Umami: 5, Salty: 10, Astringent: 20, Perceived Temperature: 70
+Jägermeister (35% ABV)
+Boozy: 80, Sweet: 70, Sour: 30, Bitter: 90, Umami: 60, Salty: 20, Astringent: 70, Perceived Temperature: 70
+Crown Royal (40% ABV)
+Boozy: 90, Sweet: 50, Sour: 10, Bitter: 50, Umami: 40, Salty: 10, Astringent: 50, Perceived Temperature: 70
+Bailey's irish cream (17% ABV)
+Boozy: 50, Sweet: 90, Sour: 20, Bitter: 40, Umami: 50, Salty: 10, Astringent: 20, Perceived Temperature: 60
+Cantaloupe (0% ABV)
+Boozy: 0, Sweet: 70, Sour: 20, Bitter: 5, Umami: 20, Salty: 10, Astringent: 10, Perceived Temperature: 60
+Milk (0% ABV)
+Boozy: 0, Sweet: 60, Sour: 30, Bitter: 10, Umami: 50, Salty: 30, Astringent: 5, Perceived Temperature: 60
+Strawberries (0% ABV)
+Boozy: 0, Sweet: 80, Sour: 40, Bitter: 5, Umami: 10, Salty: 5, Astringent: 20, Perceived Temperature: 55
+Ice (0% ABV)
+Boozy: 0, Sweet: 0, Sour: 0, Bitter: 0, Umami: 0, Salty: 0, Astringent: 0, Perceived Temperature: 0
+Brandy (35-60% ABV)
+Boozy: 90, Sweet: 40, Sour: 20, Bitter: 50, Umami: 40, Salty: 10, Astringent: 60, Perceived Temperature: 75
+Everclear (95% ABV)
+Boozy: 100, Sweet: 0, Sour: 0, Bitter: 10, Umami: 0, Salty: 0, Astringent: 80, Perceived Temperature: 90
+Irish cream (17% ABV)
+Boozy: 50, Sweet: 90, Sour: 20, Bitter: 40, Umami: 50, Salty: 10, Astringent: 20, Perceived Temperature: 60
+Ale (4-7% ABV)
+Boozy: 40, Sweet: 30, Sour: 20, Bitter: 60, Umami: 30, Salty: 10, Astringent: 40, Perceived Temperature: 50
+Coffee liqueur (20-30% ABV)
+Boozy: 70, Sweet: 80, Sour: 10, Bitter: 70, Umami: 80, Salty: 5, Astringent: 30, Perceived Temperature: 65
+Guinness stout (4.2% ABV)
+Boozy: 30, Sweet: 40, Sour: 30, Bitter: 70, Umami: 50, Salty: 10, Astringent: 50, Perceived Temperature: 45
+Añejo rum (40% ABV)
+Boozy: 90, Sweet: 60, Sour: 10, Bitter: 40, Umami: 30, Salty: 20, Astringent: 50, Perceived Temperature: 75
+Midori melon liqueur (20% ABV)
+Boozy: 50, Sweet: 80, Sour: 20, Bitter: 10, Umami: 10, Salty: 5, Astringent: 20, Perceived Temperature: 55
+Vanilla Ice-Cream (0% ABV)
+Boozy: 0, Sweet: 100, Sour: 10, Bitter: 5, Umami: 30, Salty: 10, Astringent: 5, Perceived Temperature: 50
+Pineapple juice (0% ABV)
+Boozy: 0, Sweet: 70, Sour: 30, Bitter: 5, Umami: 10, Salty: 5, Astringent: 10, Perceived Temperature: 60
+Bourbon (40% ABV)
+Boozy: 95, Sweet: 40, Sour: 10, Bitter: 60, Umami: 50, Salty: 10, Astringent: 60, Perceived Temperature: 80
+Sambuca (38% ABV)
+Boozy: 85, Sweet: 70, Sour: 20, Bitter: 80, Umami: 20, Salty: 5, Astringent: 60, Perceived Temperature: 70
+Vanilla ice-cream (0% ABV)
+Boozy: 0, Sweet: 100, Sour: 10, Bitter: 5, Umami: 30, Salty: 10, Astringent: 5, Perceived Temperature: 50
+Corona (4.6% ABV)
+Boozy: 30, Sweet: 10, Sour: 20, Bitter: 30, Umami: 10, Salty: 10, Astringent: 30, Perceived Temperature: 50
+Coffee (0% ABV)
+Boozy: 0, Sweet: 10, Sour: 30, Bitter: 90, Umami: 80, Salty: 5, Astringent: 40, Perceived Temperature: 90
+Lime (0% ABV)
+Boozy: 0, Sweet: 10, Sour: 80, Bitter: 40, Umami: 5, Salty: 10, Astringent: 30, Perceived Temperature: 60
+Orange (0% ABV)
+Boozy: 0, Sweet: 70, Sour: 50, Bitter: 20, Umami: 10, Salty: 5, Astringent: 20, Perceived Temperature: 60
+Cocoa powder (0% ABV)
+Boozy: 0, Sweet: 40, Sour: 10, Bitter: 100, Umami: 80, Salty: 10, Astringent: 40, Perceived Temperature: 60
+Chocolate (0% ABV)
+Boozy: 0, Sweet: 80, Sour: 10, Bitter: 80, Umami: 70, Salty: 20, Astringent: 20, Perceived Temperature: 60
+Chocolate liqueur (25-30% ABV)
+Boozy: 70, Sweet: 90, Sour: 10, Bitter: 70, Umami: 60, Salty: 5, Astringent: 30, Perceived Temperature: 65
+Banana liqueur (25-30% ABV)
+Boozy: 70, Sweet: 90, Sour: 10, Bitter: 20, Umami: 20, Salty: 5, Astringent: 20, Perceived Temperature: 60
+Bacardi Limon (32% ABV)
+Boozy: 80, Sweet: 40, Sour: 70, Bitter: 20, Umami: 10, Salty: 40, Astringent: 30, Perceived Temperature: 65
+Bitters (40-50% ABV)
+Boozy: 90, Sweet: 20, Sour: 50, Bitter: 100, Umami: 40, Salty: 30, Astringent: 80, Perceived Temperature: 60
+Coca-Cola (0% ABV)
+Boozy: 0, Sweet: 90, Sour: 40, Bitter: 20, Umami: 10, Salty: 10, Astringent: 10, Perceived Temperature: 50
+Cointreau (40% ABV)
+Boozy: 85, Sweet: 80, Sour: 50, Bitter: 40, Umami: 10, Salty: 5, Astringent: 30, Perceived Temperature: 65
+Cranberries (0% ABV)
+Boozy: 0, Sweet: 40, Sour: 80, Bitter: 10, Umami: 5, Salty: 5, Astringent: 20, Perceived Temperature: 50
+Spiced rum (35-40% ABV)
+Boozy: 85, Sweet: 70, Sour: 20, Bitter: 50, Umami: 40, Salty: 30, Astringent: 50, Perceived Temperature: 75
+Whiskey (40% ABV)
+Boozy: 95, Sweet: 30, Sour: 20, Bitter: 70, Umami: 50, Salty: 10, Astringent: 60, Perceived Temperature: 80
+demerara Sugar (0% ABV)
+Boozy: 0, Sweet: 100, Sour: 0, Bitter: 0, Umami: 0, Salty: 0, Astringent: 0, Perceived Temperature: 50
+Dark Rum (40% ABV)
+Boozy: 90, Sweet: 60, Sour: 10, Bitter: 50, Umami: 40, Salty: 20, Astringent: 60, Perceived Temperature: 75
+Cherry Heering (24% ABV)
+Boozy: 60, Sweet: 80, Sour: 30, Bitter: 40, Umami: 20, Salty: 5, Astringent: 40, Perceived Temperature: 60
+gin (40% ABV)
+Boozy: 90, Sweet: 10, Sour: 40, Bitter: 70, Umami: 10, Salty: 10, Astringent: 60, Perceived Temperature: 70
+Fruit punch (0-5% ABV)
+Boozy: 10, Sweet: 90, Sour: 60, Bitter: 10, Umami: 10, Salty: 5, Astringent: 10, Perceived Temperature: 60
+Heavy cream (0% ABV)
+Boozy: 0, Sweet: 30, Sour: 20, Bitter: 40, Umami: 60, Salty: 30, Astringent: 10, Perceived Temperature: 60
+Dubonnet Rouge (19% ABV)
+Boozy: 55, Sweet: 60, Sour: 40, Bitter: 50, Umami: 30, Salty: 10, Astringent: 40, Perceived Temperature: 60
+Pisco (40% ABV)
+Boozy: 90, Sweet: 20, Sour: 30, Bitter: 40, Umami: 20, Salty: 10, Astringent: 50, Perceived Temperature: 70
+Chocolate syrup (0% ABV)
+Boozy: 0, Sweet: 100, Sour: 10, Bitter: 70, Umami: 40, Salty: 10, Astringent: 20, Perceived Temperature: 60
+Egg yolk (0% ABV)
+Boozy: 0, Sweet: 20, Sour: 10, Bitter: 10, Umami: 80, Salty: 30, Astringent: 5, Perceived Temperature: 60
+Egg (0% ABV)
+Boozy: 0, Sweet: 10, Sour: 20, Bitter: 20, Umami: 70, Salty: 40, Astringent: 10, Perceived Temperature: 60
+Firewater (90% ABV)
+Boozy: 100, Sweet: 0, Sour: 0, Bitter: 30, Umami: 0, Salty: 0, Astringent: 90, Perceived Temperature: 90
+Cognac (40% ABV)
+Boozy: 95, Sweet: 40, Sour: 10, Bitter: 50, Umami: 30, Salty: 5, Astringent: 60, Perceived Temperature: 75
+Yoghurt (0% ABV)
+Boozy: 0, Sweet: 60, Sour: 50, Bitter: 10, Umami: 50, Salty: 20, Astringent: 10, Perceived Temperature: 50
+Galliano (30% ABV)
+Boozy: 75, Sweet: 90, Sour: 20, Bitter: 60, Umami: 30, Salty: 10, Astringent: 40, Perceived Temperature: 65
+Lime juice (0% ABV)
+Boozy: 0, Sweet: 20, Sour: 90, Bitter: 30, Umami: 5, Salty: 10, Astringent: 40, Perceived Temperature: 60
+Cachaca (38-48% ABV)
+Boozy: 90, Sweet: 30, Sour: 20, Bitter: 30, Umami: 20, Salty: 10, Astringent: 50, Perceived Temperature: 70
+Red wine (12-15% ABV)
+Boozy: 50, Sweet: 40, Sour: 50, Bitter: 60, Umami: 50, Salty: 10, Astringent: 70, Perceived Temperature: 65
+Grapes (0% ABV)
+Boozy: 0, Sweet: 70, Sour: 40, Bitter: 10, Umami: 10, Salty: 5, Astringent: 20, Perceived Temperature: 55
+Green Creme de Menthe (24% ABV)
+Boozy: 60, Sweet: 90, Sour: 20, Bitter: 50, Umami: 10, Salty: 5, Astringent: 40, Perceived Temperature: 55
+Cider (4.5-8% ABV)
+Boozy: 40, Sweet: 60, Sour: 40, Bitter: 20, Umami: 10, Salty: 5, Astringent: 30, Perceived Temperature: 55
+Whisky (40-55% ABV)
+Boozy: 95, Sweet: 30, Sour: 20, Bitter: 70, Umami: 50, Salty: 10, Astringent: 60, Perceived Temperature: 80
+Hot Damn (70% ABV)
+Boozy: 95, Sweet: 40, Sour: 10, Bitter: 60, Umami: 20, Salty: 10, Astringent: 70, Perceived Temperature: 80
+Grape juice (0% ABV)
+Boozy: 0, Sweet: 80, Sour: 50, Bitter: 10, Umami: 10, Salty: 5, Astringent: 20, Perceived Temperature: 60
+Lemon peel (0% ABV)
+Boozy: 0, Sweet: 10, Sour: 60, Bitter: 50, Umami: 10, Salty: 20, Astringent: 40, Perceived Temperature: 60
+Irish whiskey (40% ABV)
+Boozy: 90, Sweet: 30, Sour: 20, Bitter: 60, Umami: 40, Salty: 10, Astringent: 50, Perceived Temperature: 75
+Apple brandy (40% ABV)
+Boozy: 90, Sweet: 50, Sour: 30, Bitter: 40, Umami: 20, Salty: 5, Astringent: 50, Perceived Temperature: 70
+Baileys irish cream (17% ABV)
+Boozy: 50, Sweet: 90, Sour: 20, Bitter: 40, Umami: 50, Salty: 10, Astringent: 20, Perceived Temperature: 60
+Blackberry brandy (18-25% ABV)
+Boozy: 60, Sweet: 70, Sour: 40, Bitter: 30, Umami: 20, Salty: 5, Astringent: 40, Perceived Temperature: 65
+Ginger (0% ABV)
+Boozy: 0, Sweet: 20, Sour: 40, Bitter: 60, Umami: 50, Salty: 10, Astringent: 50, Perceived Temperature: 80
+Creme de Cassis (20% ABV)
+Boozy: 50, Sweet: 90, Sour: 50, Bitter: 40, Umami: 10, Salty: 5, Astringent: 30, Perceived Temperature: 55
+Cranberry vodka (35% ABV)
+Boozy: 80, Sweet: 40, Sour: 70, Bitter: 10, Umami: 5, Salty: 5, Astringent: 20, Perceived Temperature: 60
+Kiwi liqueur (20-30% ABV)
+Boozy: 60, Sweet: 80, Sour: 60, Bitter: 20, Umami: 10, Salty: 5, Astringent: 20, Perceived Temperature: 55
+Kiwi (0% ABV)
+Boozy: 0, Sweet: 70, Sour: 50, Bitter: 5, Umami: 10, Salty: 5, Astringent: 20, Perceived Temperature: 55
+Kool-Aid (0% ABV)
+Boozy: 0, Sweet: 90, Sour: 60, Bitter: 5, Umami: 5, Salty: 10, Astringent: 5, Perceived Temperature: 60
+Mango (0% ABV)
+Boozy: 0, Sweet: 90, Sour: 30, Bitter: 5, Umami: 20, Salty: 5, Astringent: 10, Perceived Temperature: 60
+Carbonated water (0% ABV)
+Boozy: 0, Sweet: 0, Sour: 30, Bitter: 10, Umami: 0, Salty: 10, Astringent: 5, Perceived Temperature: 50
+Beer (4-7% ABV)
+Boozy: 40, Sweet: 20, Sour: 30, Bitter: 60, Umami: 30, Salty: 10, Astringent: 40, Perceived Temperature: 50
+Espresso (0% ABV)
+Boozy: 0, Sweet: 10, Sour: 10, Bitter: 100, Umami: 90, Salty: 5, Astringent: 60, Perceived Temperature: 90
+Mint (0% ABV)
+Boozy: 0, Sweet: 20, Sour: 30, Bitter: 60, Umami: 40, Salty: 10, Astringent: 50, Perceived Temperature: 60
+Absinthe (45-74% ABV)
+Boozy: 95, Sweet: 40, Sour: 30, Bitter: 90, Umami: 20, Salty: 10, Astringent: 70, Perceived Temperature: 70
+Cherry brandy (24-40% ABV)
+Boozy: 80, Sweet: 70, Sour: 30, Bitter: 40, Umami: 20, Salty: 5, Astringent: 40, Perceived Temperature: 65
+Lemon juice (0% ABV)
+Boozy: 0, Sweet: 20, Sour: 90, Bitter: 30, Umami: 5, Salty: 10, Astringent: 40, Perceived Temperature: 60
+Sprite (0% ABV)
+Boozy: 0, Sweet: 80, Sour: 60, Bitter: 10, Umami: 5, Salty: 10, Astringent: 10, Perceived Temperature: 60
+Port (19-20% ABV)
+Boozy: 60, Sweet: 90, Sour: 30, Bitter: 50, Umami: 40, Salty: 5, Astringent: 50, Perceived Temperature: 65
+Coffee brandy (30-40% ABV)
+Boozy: 80, Sweet: 50, Sour: 20, Bitter: 70, Umami: 60, Salty: 5, Astringent: 40, Perceived Temperature: 70
+Black Sambuca (40% ABV)
+Boozy: 85, Sweet: 70, Sour: 20, Bitter: 90, Umami: 20, Salty: 5, Astringent: 60, Perceived Temperature: 70
+Sugar syrup (0% ABV)
+Boozy: 0, Sweet: 100, Sour: 10, Bitter: 0, Umami: 0, Salty: 0, Astringent: 0, Perceived Temperature: 50
+Raspberry vodka (35% ABV)
+Boozy: 80, Sweet: 60, Sour: 50, Bitter: 10, Umami: 5, Salty: 5, Astringent: 20, Perceived Temperature: 60
+Frangelico (20% ABV)
+Boozy: 55, Sweet: 90, Sour: 10, Bitter: 40, Umami: 30, Salty: 5, Astringent: 30, Perceived Temperature: 60
+Grapefruit juice (0% ABV)
+Boozy: 0, Sweet: 40, Sour: 80, Bitter: 60, Umami: 10, Salty: 10, Astringent: 40, Perceived Temperature: 60
+Ricard (45% ABV)
+Boozy: 90, Sweet: 20, Sour: 40, Bitter: 60, Umami: 20, Salty: 20, Astringent: 50, Perceived Temperature: 65
+Johnnie Walker (40% ABV)
+Boozy: 90, Sweet: 30, Sour: 20, Bitter: 70, Umami: 50, Salty: 10, Astringent: 60, Perceived Temperature: 75
+Sherry (15-22% ABV)
+Boozy: 60, Sweet: 70, Sour: 40, Bitter: 50, Umami: 40, Salty: 10, Astringent: 50, Perceived Temperature: 65
+Jim Beam (40% ABV)
+Boozy: 90, Sweet: 40, Sour: 10, Bitter: 60, Umami: 40, Salty: 10, Astringent: 50, Perceived Temperature: 75
+Sloe gin (25-30% ABV)
+Boozy: 70, Sweet: 70, Sour: 40, Bitter: 50, Umami: 10, Salty: 5, Astringent: 40, Perceived Temperature: 60
+Advocaat (14-20% ABV)
+Boozy: 50, Sweet: 90, Sour: 20, Bitter: 20, Umami: 30, Salty: 10, Astringent: 20, Perceived Temperature: 55
+Peach nectar (0% ABV)
+Boozy: 0, Sweet: 80, Sour: 40, Bitter: 10, Umami: 20, Salty: 5, Astringent: 20, Perceived Temperature: 60
+Prosecco (11% ABV)
+Boozy: 40, Sweet: 50, Sour: 40, Bitter: 20, Umami: 5, Salty: 5, Astringent: 30, Perceived Temperature: 55
+Lemon (0% ABV)
+Boozy: 0, Sweet: 30, Sour: 90, Bitter: 40, Umami: 5, Salty: 10, Astringent: 40, Perceived Temperature: 60
+Ouzo (40-50% ABV)
+Boozy: 90, Sweet: 30, Sour: 40, Bitter: 80, Umami: 20, Salty: 20, Astringent: 60, Perceived Temperature: 70
+Godiva liqueur (30% ABV)
+Boozy: 75, Sweet: 95, Sour: 10, Bitter: 60, Umami: 50, Salty: 5, Astringent: 20, Perceived Temperature: 60
+Grand Marnier (40% ABV)
+Boozy: 85, Sweet: 80, Sour: 40, Bitter: 40, Umami: 20, Salty: 10, Astringent: 30, Perceived Temperature: 65
+Yukon Jack (100 proof, ~50% ABV)
+Boozy: 95, Sweet: 60, Sour: 20, Bitter: 40, Umami: 30, Salty: 10, Astringent: 50, Perceived Temperature: 75
+Tomato juice (0% ABV)
+Boozy: 0, Sweet: 30, Sour: 40, Bitter: 10, Umami: 80, Salty: 60, Astringent: 20, Perceived Temperature: 60
+Wild Turkey (81 proof, ~40.5% ABV)
+Boozy: 90, Sweet: 20, Sour: 10, Bitter: 70, Umami: 40, Salty: 10, Astringent: 60, Perceived Temperature: 80
+White Rum (40% ABV)
+Boozy: 85, Sweet: 40, Sour: 10, Bitter: 20, Umami: 20, Salty: 20, Astringent: 30, Perceived Temperature: 70
+Vermouth (16-18% ABV)
+Boozy: 50, Sweet: 60, Sour: 50, Bitter: 60, Umami: 40, Salty: 10, Astringent: 50, Perceived Temperature: 60
+Zima (4.7% ABV)
+Boozy: 30, Sweet: 60, Sour: 40, Bitter: 20, Umami: 5, Salty: 10, Astringent: 20, Perceived Temperature: 55
+Peachtree schnapps (15-20% ABV)
+Boozy: 50, Sweet: 90, Sour: 30, Bitter: 10, Umami: 10, Salty: 5, Astringent: 20, Perceived Temperature: 55
+Chambord raspberry liqueur (16.5% ABV)
+Boozy: 50, Sweet: 90, Sour: 50, Bitter: 20, Umami: 10, Salty: 5, Astringent: 30, Perceived Temperature: 55
