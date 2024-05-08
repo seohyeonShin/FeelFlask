@@ -24,7 +24,7 @@ def show_v2(file_path, indices):
 
         col1, col2 = st.columns([0.5, 0.5])
         with col1:
-            st.markdown("[![naver link](app/lib/img_test.png)]({row[link]})")
+            st.markdown("[![naver link](app/lib/img_test.png)](" + row[link] + ")")
             # st.image('./lib/img_test.png', use_column_width=True)
             # st.write("[buy this drink](%s)" % row[link])
         with col2:
