@@ -1,0 +1,61 @@
+#################################################
+#									부피 측정 단위  									#
+#################################################
+
+oz -> fluid ounce -> 29.5735ml
+cl -> centilitre -> 10ml
+tsp -> teaspoon -> 4.92892ml
+tblsp -> tablespoon -> 14.7868ml
+dash -> 0.625ml
+cup -> 236.588ml
+pinch -> 0.3125ml
+shot -> 44ml
+glasses -> 240 to 473ml -> 256.3ml
+drop -> 0.05ml
+can -> 330ml
+jigger -> 44.36ml
+dl -> deciliter -> 100ml
+bottle -> 750ml
+pint -> 473.176ml
+quart, qt -> 946.353ml
+l -> 1000ml
+splash -> 5.91ml
+gal -> 3785.41ml
+dash of -> 0.92ml
+scoop -> 30 to 60ml -> 45ml
+ml -> 1ml
+cubes -> ice or sugar cube (각설탕, 얼음 큐브 단위)
+
+#################################################
+#										무게 단위											#
+#################################################
+
+gr -> gram (무게단위)
+lb -> pounds -> 0.45kg -> 450g
+kg -> 1000g
+inch -> 2.54cm (길이 단위)
+
+#################################################
+#								합의가 필요한 단위									#
+#################################################
+
+part(s) -> 총 glass 용량을 합한 part로 나누는 것
+top up with -> 위에  무언가를 언져서 마무리하는 것
+fill, fill with, to fill, fill to top -> 그릇에 가득 채우다
+a little bit of -> 약간 (nutmeg, salt)
+slice -> 오렌지, 라임, 레몬 슬라이스
+juice of -> 과일 착즙량 (lemon->대략 45ml)
+sprig -> 2-4 inch 허브 줄기
+wedge -> 반달모양의 조각
+twist of -> 과일 껍질
+long strip -> 껍질
+whole, large -> 개개 갯수
+piece -> 조각
+chunks -> 과일 뭉치 (=wedge나 whole이랑 비슷하지 않을까..)
+to taste, by taste -> 설탕 선택 취향
+handful -> 한줌량 (Nut 기준 36.3g)
+stick -> 스틱 (시나몬)
+package -> 패키지용량
+leaves -> 허브 한 잎사귀
+
+

@@ -1,0 +1,32 @@
+##################################################
+#               Glass 용량 정보                   #
+##################################################
+
+# Beer Glass : 435ml
+# Beer mug : 415ml
+# Beer pilsner : 350ml
+# Brandy snifter : 210ml
+# Champagne flute : 240ml
+# Cocktail Glass : 195ml
+# Coffee Mug : 295ml
+# Collins Glass : 355ml
+# Copper Mug : 250ml
+# Cordial glass : 60ml
+# Highball Glass : 295ml
+# Hurricane glass : 590ml
+# Irish coffee cup : 250ml
+# Jar : 775ml
+# Margarita glass : 400ml
+# Coupette glass : 230ml
+# Martini Glass : 192.5ml
+# Mason jar : 500ml
+# old-fashioned glass : 240ml
+# parfait glass : 250ml
+# pint glass : 520ml
+# pitcher glass : 2050ml
+# pousse cafe glass : 180ml
+# punch bowl : 4000ml
+# Shot glass : 35ml
+# Whiskey sour glass: 230ml
+# White wine glass: 225ml
+# wine glass : 150ml
