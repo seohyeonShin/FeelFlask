@@ -1,0 +1,43 @@
+'top up with' -> bitter lemon, tonic water, champagne, soda water, cranberry juice, kahlua, cream, sweet and sour,  whipped cream, lemonade, prosecco, cherry brandy, 151 proof rum, lime, ginger ale, chocolate syrup, mint syrup, grenadine
+
+'a little bit of'-> nutmeg, salt, cloves, sherbet, cranberry juice, blackcurrant squash
+
+'slice' -> lemon, orange, lime, strawberries, apple, pineapple
+
+'juice of' -> lemon, orange, lime, cantaloupe
+
+'sprig' -> vanilla, lavender, mint
+
+'wedge' -> bitters, lime, orange, pineapple, banana, orange spiral
+
+'twist of' -> lemon peel, orange peel, lime peel
+
+'long strip' -> lemon peel
+
+'whole' -> strawberries, cherry, wormwood, egg white, apricot, anise, apple, cloves, allspice, mini-snickers bars, egg, lime, egg yolk, marshmallows, kiwi, papaya, mango, cardamom, black pepper, oreo cookie, pineapple, cinnamon, olive, 
+
+'large' -> carrot, orange, lemon, apple
+
+'piece' -> banana, sugar, fruit, lime, ginger, cinnamon,
+
+'chunk' -> pineapple, ginger
+
+'by taste' -> fruit, fruit juice, sugar, lime, powdered sugar
+
+'to taste' -> sugar, honey, powdered sugar, lemon juice, salt, milk, soda water
+
+'handful' -> mint
+
+'stick' -> cinnamon
+
+'package' -> jello, cream
+
+'leaves' -> mint
+
+'garnish' -> lemon, maraschino cherry, cherry, olive, lime, cherries 
+
+'cubes' -> ice, sugar
+
+
+
+
