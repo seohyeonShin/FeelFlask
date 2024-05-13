@@ -14,7 +14,7 @@
 
 'long strip' -> lemon peel
 
-'whole' -> strawberries, egg white, apricot, apple, cloves, allspice, mini-snickers bars, egg, lime, egg yolk, marshmallows, kiwi, papaya, mango, cardamom, black pepper, oreo cookie, pineapple, cinnamon, olive, 
+'whole' -> strawberries, egg white, apricot, apple, cloves, allspice, mini-snickers bars, egg, lime, egg yolk, marshmallows, kiwi, papaya, mango, cardamom, black pepper, oreo cookie, pineapple, cinnamon, olive, lemon, orange 
 
 'large' -> carrot, orange, lemon, apple
 

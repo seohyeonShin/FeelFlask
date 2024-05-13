@@ -6,7 +6,7 @@ oz -> fluid ounce -> 29.5735ml
 fl oz -> fluid ounce -> 29.5735ml
 cl -> centilitre -> 10ml
 tsp -> teaspoon -> 4.92892ml
-tblsp -> tablespoon -> 14.7868ml
+tbsp, tblsp, tablespoon  -> tablespoon -> 14.7868ml
 dash -> 0.625ml
 cup -> 236.588ml
 pinch -> 0.3125ml
@@ -52,22 +52,35 @@ fill to top  -> 그릇의 남은 용량을 채우다
 #################################################
 #								합의가 필요한 단위									#
 #################################################
-    'juice of' : {'orange' : 60, 'lemon' : 40, 'lime' : 30, 'cantaloupe' : 200}, #ml 단위로 측정, 과일마다 꽤 상이함.
-    'package' : {'jello' : 180, 'cream' : 250}, # ml 단위로 측정, 상품 package에 따라 변동될 수 있음
-    'chunk' : {'pineapple' : 90, 'ginger' : 28.3}, # gram 단위로 측정. 이때, ginger의 무게는 4 inch 길이 기준으로 측정. pineapple은 총 900gram에서 100개의 조각으로 나눈 것으로 가정하여 측정.
-    'piece' : {'banana' : 118, 'cinnamon' : 2.6, 'ginger' : 35, 'lime' : 50, 'sugar' : 4, 'fruit' : 182}, # gram 단위, textual fruit의 경우 여러 과일들의 합으로 구성된 걸로 가정. 따라서 apple의 무게에 따랐음.
-    'cubes' : {'ice': 10, 'sugar':4}, # gram 단위로 가정. 각 설탕과 얼음 큐브의 무게.
-    'slice' : {'lemon':25, 'orange':30, 'lime':12.5, 'apple': 30, 'pineapple':50, 'strawberries':8.37}, # (ml단위입니다.) slice에서는 과일당 크기가 서로 비슷하다고 가정했습니다. 다만, pineapple의 경우 직경이 크기 때문에, 더 큰 부피가 나오는 걸로 가정했습니다.
-    'a little bit of' : {'nutmeg':3, 'salt':3, 'blackcurrant squash': 30, 'sherbet':50}, #ml 단위로 표현했습니다.
-    'large' : {'carrot': 100, 'orange': 125, 'lemon':60, 'apple':200}, # gram단위로 나타냈습니다.
-    'whole' : {'strawberries':15, 'egg white' : 30, 'apricot' : 35, 'apple':200, 'cloves':0.2, 'allspice':0.15, 'mini-snickers bars':9, 'egg':50, 'lime':67, 'egg yolk':20, 'marshmallows':0.7,' kiwi':69, 'papaya':275, 'mango':202, 'cardamom': 2,'black pepper':1.75,'oreo cookie': 11.3, 'pineapple': 900, 'cinnamon':1.3 ,'olive':4}, # gram 단위로 나타냈습니다.
-    'by taste' : {'fruit':100, 'fruit juice':50 ,'sugar':4, 'lime':67, 'powdered sugar':4}, # by taste, to taste는 1개를 기준으로 고정합니다. gram단위 사용 (fruit juice의 경우는 물의 비중을 따라서, 50gram으로 가정했습니다.)
-    'to taste' : {'sugar':4, 'honey': 21.4, 'powered sugar': 4, 'lemon juice':50, 'salt':6, 'milk':50, 'soda water':200, 'cranberry juice':50},
-    'wedge' : 10, # 대략 10gram으로 가정. (평균적으로 7-8gram 정도이나, 바나나와 같이 밀도가 높은 과일에 대해서는 더 높은 gram이 나올 수 있음으로, 10gram으로 가정)
-    'stick' : 4.5, # gram으로 표현. 1 stick 당 3-inch로 가정함. 1-inch cinnamon stick = 1.5g
-    'top up with' : 25, # 25 ml 정도로 가정.
-    'twist of' : 12, # 레몬 둘레 지름 길이보다 조금 짧은 길이로 가정했습니다. (cm 단위 입니다.)
-    'long strip' : 15, # 레몬 지름 길이로 가정했습니다. (cm 단위 입니다.)
-    'sprig' : 10,# cm 단위로 표현되었으며, Lavender 재료의 양을 나타내기 위해 1번 사용되었습니다.
-    'garnish' : 8, # cherry 기준으로 8gram으로 가정했습니다. 사용 목적이 장식을 기준으로 두고 있음으로, 8gram으로 통일합니다.
+
+'juice of' : {'orange' : 60, 'lemon' : 40, 'lime' : 30, 'cantaloupe' : 200}, #ml 단위로 측정, 과일마다 꽤 상이함.
+
+'package' : {'jello' : 180, 'cream' : 250}, # ml 단위로 측정, 상품 package에 따라 변동될 수 있음
+
+'chunk' : {'pineapple' : 90, 'ginger' : 28.3}, # gram 단위로 측정. 이때, ginger의 무게는 4 inch 길이 기준으로 측정. pineapple은 총 900gram에서 100개의 조각으로 나눈 것으로 가정하여 측정.
+
+'piece' : {'banana' : 118, 'cinnamon' : 2.6, 'ginger' : 35, 'lime' : 50, 'sugar' : 4, 'fruit' : 182}, # gram 단위, textual fruit의 경우 여러 과일들의 합으로 구성된 걸로 가정. 따라서 apple의 무게에 따랐음.
+
+'cubes' : {'ice': 10, 'sugar':4}, # gram 단위로 가정. 각 설탕과 얼음 큐브의 무게.
+
+'slice' : {'lemon':25, 'orange':30, 'lime':12.5, 'apple': 30, 'pineapple':50, 'strawberries':8.37}, # (ml단위입니다.) slice에서는 과일당 크기가 서로 비슷하다고 가정했습니다. 다만, pineapple의 경우 직경이 크기 때문에, 더 큰 부피가 나오는 걸로 가정했습니다.
+
+'a little bit of' : {'nutmeg':3, 'salt':3, 'blackcurrant squash': 30, 'sherbet':50}, #ml 단위로 표현했습니다.
+
+'large' : {'carrot': 100, 'orange': 125, 'lemon':60, 'apple':200}, # gram단위로 나타냈습니다.
+
+'whole' : {'strawberries':15, 'egg white' : 30, 'apricot' : 35, 'apple':200, 'cloves':0.2, 'allspice':0.15, 'mini-snickers bars':9, 'egg':50, 'lime':67, 'egg yolk':20, 'marshmallows':0.7, 'kiwi':69, 'papaya':275, 'mango':202, 'cardamom': 2,'black pepper':1.75,'oreo cookie': 11.3, 'pineapple': 900, 'cinnamon':1.3 ,'olive':4, 'lemon':58, 'orange':154}, # gram 단위로 나타냈습니다.
+
+'by taste' : {'fruit':100, 'fruit juice':50 ,'sugar':4, 'lime':67, 'powdered sugar':4}, # by taste, to taste는 1개를 기준으로 고정합니다. gram단위 사용 (fruit juice의 경우는 물의 비중을 따라서, 50gram으로 가정했습니다.)
+
+'to taste' : {'sugar':4, 'honey': 21.4, 'powdered sugar': 4, 'lemon juice':50, 'salt':6, 'milk':50, 'soda water':200, 'cranberry juice':50},
+
+
+
+
+
+
+
+
+ 
 
