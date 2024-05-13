@@ -1,0 +1,30 @@
+Beer Glass : 435
+Beer mug : 415
+Beer pilsner : 350
+Brandy snifter : 210
+Champagne flute : 240
+Cocktail Glass : 195
+Coffee Mug : 295
+Collins Glass : 355
+Copper Mug : 250
+Cordial glass : 60
+Highball Glass : 295
+Hurricane glass : 590
+Irish coffee cup : 250
+Jar : 775
+Margarita glass : 400
+Coupette glass : 230
+Martini Glass : 192.5
+Mason jar : 500
+old-fashioned glass : 240
+parfait glass : 250
+pint glass : 520
+pitcher glass : 2050
+pitcher : 2050
+pousse cafe glass : 180
+punch bowl : 4000
+Shot glass : 35
+Whiskey sour glass : 230
+White wine glass : 225
+wine glass : 150
+margarita/coupette glass : 400
