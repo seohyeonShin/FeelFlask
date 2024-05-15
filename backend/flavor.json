@@ -2889,8 +2889,8 @@
   },
   {
     "name": "grenadine",
-    "ABV": 9.0,
-    "boozy": 10.0,
+    "ABV": 0.0,
+    "boozy": 0.0,
     "sweet": 80.0,
     "sour": 20.0,
     "bitter": 0.0,
