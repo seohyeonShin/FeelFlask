@@ -608,25 +608,6 @@
     "smoky": 0.0
   },
   {
-    "name": "\"bailey's irish cream\"",
-    "ABV": 17.0,
-    "boozy": 30.0,
-    "sweet": 60.0,
-    "sour": 0.0,
-    "bitter": 10.0,
-    "umami": 0.0,
-    "salty": 0.0,
-    "astringent": 0.0,
-    "Perceived_temperature": 20.0,
-    "spicy": 0.0,
-    "herbal": 0.0,
-    "floral": 0.0,
-    "fruity": 0.0,
-    "nutty": 80.0,
-    "creamy": 60.0,
-    "smoky": 0.0
-  },
-  {
     "name": "baileys irish cream",
     "ABV": 17.0,
     "boozy": 30.0,
@@ -5812,5 +5793,24 @@
     "nutty": 0.0,
     "creamy": 0.0,
     "smoky": 0.0
+  },
+  {
+    "name": "salt",
+    "ABV": 0.0,  
+    "boozy": 0.0, 
+    "sweet": 0.0, 
+    "sour": 0.0,  
+    "bitter": 0.0,  
+    "umami": 50.0,  
+    "salty": 100.0,  
+    "astringent": 0.0,  
+    "Perceived_temperature": 0.0, 
+    "spicy": 0.0, 
+    "herbal": 0.0,
+    "floral": 0.0,
+    "fruity": 0.0,
+    "nutty": 0.0, 
+    "creamy": 0.0,
+    "smoky": 0.0  
   }
 ]
