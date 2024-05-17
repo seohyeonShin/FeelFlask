@@ -4,7 +4,7 @@ import json
 import pandas
 from lib.utils import show_v2
 
-st.markdown("# :rainbow[korean traditional liquor recommender] :cocktail:")
+st.markdown("# :rainbow[MixMaster] :cocktail:")
 
 ### sample categories for debug
 categories = []
