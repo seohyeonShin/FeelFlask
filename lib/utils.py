@@ -4,18 +4,22 @@ import numpy as np
 import random
 import time
 import plotly.express as px
+import os
+
+# DrinkName,ModifiedDate,DrinkID,Alcoholic,Category,ImageUrlPath,Glass,IBA,Instruction,Ingredients,Measures
 
 def show_v2(file_path, indices):
     df = pd.read_csv(file_path)
     rows = df.iloc[indices]
 
-    name = "name"
-    intro = "product_introduction"
-    foods = "pairing_food"
-    alcohol = "alcohol_content"
-    ingredients = "ingredients"
-    price = "Naver Price"
-    link = "Naver Link"
+    name = "DrinkName"
+    intro = "Instruction"
+    category = "Category"
+    alcoholic = "Alcoholic"
+    ingredients = "Ingredients"
+    
+    ### idx : index for printing images
+    idx = 0
 
     for _, row in rows.iterrows():
         st.header("", divider="rainbow")
@@ -24,9 +28,8 @@ def show_v2(file_path, indices):
 
         col1, col2 = st.columns([0.5, 0.5])
         with col1:
-            st.markdown("[![naver link](app/lib/img_test.png)](" + row[link] + ")")
-            # st.image('./lib/img_test.png', use_column_width=True)
-            # st.write("[buy this drink](%s)" % row[link])
+            show_image (indices, idx)
+            idx += 1
         with col2:
             random_5 = random.sample(range(1,6), 5)
             df = pd.DataFrame(dict(
@@ -36,7 +39,19 @@ def show_v2(file_path, indices):
             fig = px.line_polar(df, r='r', theta='theta', line_close=True)
             st.plotly_chart(fig, use_container_width=True)
         with st.expander("see additional informations"):
-            st.markdown("##### alcohol level :red[" + str(row[alcohol]) + "]")
-            st.markdown("##### pairing foods :green[" + str(row[foods]) + "]")
-            st.markdown("##### ingredients :white[" + str(row[ingredients] + "]"))
-            st.markdown("##### price :white[" + str(row[price] + "]"))
+            is_alcoholic (alcoholic)
+            st.markdown("##### :green[category] :white[" + row[category] + "]")
+            st.markdown("##### :green[ingredients] :white[" + str(row[ingredients] + "]"))
+
+def show_image(indices, i):
+    image_path = f'./backend/data_works/drinks_img/img_{indices[i]}.jpg'
+    if os.path.exists(image_path):
+        st.image(image_path, use_column_width=True)
+    else:
+        st.error(f"Image not found at path: {image_path}")
+
+def is_alcoholic (alcoholic):
+    if alcoholic == 'Alcoholic':
+        st.markdown("##### :red[alcoholic]")
+    else:
+        st.markdown("##### :green[non-alcoholic]")
