@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import random
 import tensorflow as tf
+import wandb
 class CocktailEmbeddingMaker:
     def __init__(self, json_data, flavor_data, total_amount=200):
         self.cocktail_info = json_data['cocktail_info']
@@ -83,6 +84,7 @@ class CocktailEmbeddingMaker:
     def calculate_recipe_taste_weights(self, recipe):
         recipe_ingredients = [d for d in self.flavor_data if d['name'] in list(recipe.keys())]
         total_amount = sum(recipe.values())
+        print(f"Total Amount: {total_amount} , Recipe: {recipe}")
         ingredient_ratios = {ingredient: amount / total_amount for ingredient, amount in recipe.items()}
         recipe_taste_weights = {}
         for ingredient, ratio in ingredient_ratios.items():
@@ -125,7 +127,9 @@ class CocktailEmbeddingMaker:
             else:
                 recipe_taste_weights = self.calculate_recipe_taste_weights(cocktail_recipe)
                 recipe_taste_weights.pop('ID')
+                print(f"[get_taste_info]recipe_taste_weights : {recipe_taste_weights}")
                 return recipe_taste_weights
+            
     def create_combined_embedding_list(self):
         recipe_embeddings = self.create_recipe_embedding_list()
         taste_embeddings = self.create_taste_embedding_list()
@@ -152,36 +156,67 @@ class Eval(CocktailEmbeddingMaker):
         self.model = None
     def evaluate_model(self,model, test_user_list, num_recipes=100):
         self.model = model
+        similarity_list= []
+        diversity_list = []
+        abv_match_list = []
+        taste_match_list = []
+        recipe_profile_list=[]
         for user in test_user_list:
             # def generate_recipe(self, seed_ingredient, user_preference, max_length=10):
             seed_ingredient=random.choice(list(self.ingredient_ids.keys()))
             generated_recipes = self.generate_recipe(seed_ingredient,user)
+            recipe_profile=self.get_taste_log(generated_recipes)
+            recipe_profile_list.append(recipe_profile)
+            s = self.evaluate_similarity(generated_recipes)
+            d = self.evaluate_diversity(generated_recipes)
+            a = self.evaluate_abv_match(generated_recipes, user)
+            t = self.evaluate_taste_match(generated_recipes, user)
+            print(f"s : {s}, d : {d}, a : {a}, t : {t}")
+            similarity_list.append(s)
+            diversity_list.append(d)
+            abv_match_list.append(a)
+            taste_match_list.append(t)
+
+        similarity = np.mean(similarity_list)
+        diversity = np.mean(diversity_list)
+        abv_match = np.mean(abv_match_list)
+        taste_match = np.mean(taste_match_list)
+        evaluation_metrics = {
+            'similarity': similarity,
+            'diversity': diversity,
+            'abv_match': abv_match,
+            'taste_match': taste_match
+        }
         
-            similarity = self.evaluate_similarity(generated_recipes)
-            diversity = self.evaluate_diversity(generated_recipes)
-            abv_match = self.evaluate_abv_match(generated_recipes, user)
-            taste_match = self.evaluate_taste_match(generated_recipes, user)
+        return evaluation_metrics,recipe_profile_list
+    def evaluate_similarity(self, generated_recipe):
         
-            evaluation_metrics = {
-                'similarity': similarity,
-                'diversity': diversity,
-                'abv_match': abv_match,
-                'taste_match': taste_match
-            }
         
-        return evaluation_metrics
-    def evaluate_similarity(self, generated_recipes):
-        # 생성된 레시피와 원본 레시피 간의 유사도 계산
-        similarity_scores = []
-        for generated_recipe in generated_recipes:
-            max_similarity = 0
-            for origin_recipe in self.cocktail_info:
-                common_ingredients = set(generated_recipe).intersection(origin_recipe)
-                similarity = len(common_ingredients) / len(set(generated_recipe + list(origin_recipe.keys())))
-                max_similarity = max(max_similarity, similarity)
-            similarity_scores.append(max_similarity)
-        avg_similarity = np.mean(similarity_scores)
-        return avg_similarity
+        recipe_dict = {}
+        for item, quantity_ratio in zip(generated_recipe[0], generated_recipe[1]):
+            recipe_dict[item] = quantity_ratio * self.total_amount
+        # 벡터 생성 함수
+        def create_vector(recipe, all_ingredients):
+            return np.array([recipe.get(ing, 0) for ing in all_ingredients])
+
+        # 모든 재료 목록 생성
+        all_ingredients = set(recipe_dict.keys())
+        for cocktail in self.cocktail_info:
+            all_ingredients.update(cocktail['recipe'].keys())
+
+        generated_vector = create_vector(recipe_dict, all_ingredients)
+
+        max_similarity = 0
+        for cocktail in self.cocktail_info:
+            origin_vector = create_vector(cocktail['recipe'], all_ingredients)
+
+            # 코사인 유사도 계산
+            dot_product = np.dot(generated_vector, origin_vector)
+            norm_product = np.linalg.norm(generated_vector) * np.linalg.norm(origin_vector)
+            similarity = dot_product / norm_product if norm_product else 0
+            max_similarity = max(max_similarity, similarity)
+
+        return max_similarity
 
     def evaluate_diversity(self, generated_recipes):
         # 생성된 레시피와 원본 레시피 간의 다양성 계산
@@ -204,14 +239,15 @@ class Eval(CocktailEmbeddingMaker):
         return diversity
 
     def evaluate_abv_match(self, generated_recipes, user_preference):
-        # 레시피의 도수 일치도 계산 로직 구현
-        abv_diffs = []
-        recipe_abv = self.calculate_recipe_abv(generated_recipes[0],generated_recipes[1])
-        # print(recipe_abv)
+        recipe_abv = self.calculate_recipe_abv(generated_recipes[0], generated_recipes[1])
+
+        if user_preference['ABV'] == 0:
+            return 1 if recipe_abv == 0 else 0  # 사용자가 알코올을 선호하지 않으면, 레시피도 0%여야 완벽한 일치
+
         abv_diff = abs(recipe_abv - user_preference['ABV'])
-        abv_diffs.append(abv_diff)
-        avg_abv_diff = np.mean(abv_diffs)
-        abv_match = 1 - avg_abv_diff / user_preference['ABV']
+        normalized_abv_diff = abv_diff / (user_preference['ABV'] + 0.1)  # 0.1을 더해 분모가 0이 되는 것을 방지
+        abv_match = max(0, 1 - normalized_abv_diff)  # 음수 값 방지와 0-1 범위 보장
+
         return abv_match
 
     def evaluate_taste_match(self, generated_recipe, user_preference):
@@ -220,26 +256,37 @@ class Eval(CocktailEmbeddingMaker):
         recipe = {}
         for item, quantity_ratio in zip(generated_recipe[0], generated_recipe[1]):
             recipe[item] = quantity_ratio * self.total_amount
+            #재료-양 완성 
+        #레시피의 맛 프로파일 생성
         recipe_taste = self.get_taste_info(recipe)
-        
-        # 사용자 선호도의 총 가중치 계산
-        total_weight = sum(weight for taste, weight in user_preference.items() if taste != 'ABV' and taste != 'user_id' and taste != 'ID')
-        
-        # 맛 특성 일치도 점수 계산
-        taste_score = 0
-        for taste, weight in user_preference.items():
-            if (taste != 'ABV' and taste != 'user_id' and taste != 'ID') and taste in recipe_taste:
-                taste_score += recipe_taste[taste] * weight
-        
-        # 일치도 점수 정규화
-        if total_weight > 0:
-            normalized_taste_score = (taste_score / total_weight) * 100
+        print("Recipe Taste Profile:", recipe_taste)
+        #생성 레시피 맛 프로파일과 사용자 선호도 간의 맛 일치도 계산
+        taste_differences = []
+        for taste, user_score in user_preference.items():
+            
+            if taste!='ABV' and taste in recipe_taste:
+                recipe_score = recipe_taste[taste]
+                # 각 맛 특성별 점수 차이의 절대값 계산
+                difference = abs(recipe_score - user_score)
+                # 차이를 100으로 나누어 정규화
+                normalized_difference = difference / 100
+                taste_differences.append(normalized_difference)
+            # 평균 일치도 계산 (1에서 정규화된 차이의 평균을 뺀 값)
+        if taste_differences:
+            average_match = 1 - np.mean(taste_differences)
         else:
-            normalized_taste_score = 0
-        
-        taste_match_scores.append(normalized_taste_score)
-        avg_taste_match = np.mean(taste_match_scores)
-        return avg_taste_match
+            average_match = 0  # 레시피에 맛 특성 정보가 없을 경우
+
+        return average_match
+    
+    def get_taste_log(self,generated_recipe):
+        recipe = {}
+        for item, quantity_ratio in zip(generated_recipe[0], generated_recipe[1]):
+            recipe[item] = quantity_ratio * self.total_amount
+            #재료-양 완성 
+        #레시피의 맛 프로파일 생성
+        recipe_taste = self.get_taste_info(recipe)
+        return recipe_taste
     def generate_recipe(self, seed_ingredient, user_preference, max_length=10):
         generated_recipe = [seed_ingredient]
         generated_quantities = []
