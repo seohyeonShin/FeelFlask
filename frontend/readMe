@@ -1,0 +1,7 @@
+아래와 같은 명령어를 이용해 실행.
+
+1. FastAPI (가상 ML 모델)
+uvicorn fastapi_service:app --reload
+
+2. streamlit
+streamlit run app.py
