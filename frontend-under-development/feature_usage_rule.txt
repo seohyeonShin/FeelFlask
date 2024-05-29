@@ -1,0 +1,12 @@
+main input : "ABV", "sweet", "sour", "bitter", "spicy", "herbal"
+sub input : boozy -> follows "ABV" value
+						floral -> input by picture selection
+						fruity -> input by picture selection
+						nutty -> input by picture selection
+						astringent -> follows "bitterness" value
+						umami -> follows the herbal + spicy (5:5)
+						salty -> random generate between (0~100)
+						perceived_t -> random generate between (30~50)
+						creamy -> random generate between (0~100)
+						smoky -> random generate between (0~100)
+						
