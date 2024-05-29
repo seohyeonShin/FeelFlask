@@ -8,6 +8,7 @@ def pull_data():
     existing_data = conn.read(worksheet="feedbacks", usecols=list(range(4)), ttl=5)
     existing_data = existing_data.dropna(how='all')
     st.dataframe(existing_data)
+    return existing_data
 
 # inputs = [0.0, 0.0, 10.0, 0.0, 5.0, 20.0, 0.0, 0.0, 20.0, 0.0, 0.0, 0.0, 0.0, 80.0, 20.0, 0.0]
 # pred_ingredients = ["재료4", "재료5", "재료6"]
@@ -27,4 +28,4 @@ def push_data(inputs, pred_ingredients, pred_amounts, feedback):
 
     conn.update(worksheet="feedbacks", data=updated_df)
 
-    st.success('Feedback received!!')
+    return True
