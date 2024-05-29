@@ -1,34 +1,32 @@
+# streamlit run app.py
 import streamlit as st
-import numpy as np
-import json
-import pandas
-from lib.utils import show_v2
+import random
+from streamlit_lottie import st_lottie
+from frontend.data_loader import load_data, load_lottie_files, initialize_session_state
+from frontend.page_handlers import show_recommendation, handle_welcome_page, handle_drink_type_page, handle_flavor_preference_page, show_loading_page, handle_ingredient_selection_page
 
-st.markdown("# :rainbow[MixMaster] :cocktail:")
+# Load data
+train_df, top_ingredients_list = load_data()
 
-### sample categories for debug
-categories = []
-with open('./lib/categories.json', 'r') as file:
-    categories = json.load(file)
+# Load Lottie animations
+welcome_animations = load_lottie_files("frontend/lottie_files/welcome ({}).json", 1, 10)
+loading_animations = load_lottie_files("frontend/lottie_files/loading ({}).json", 1, 10)
+cocktail_animations = load_lottie_files("frontend/lottie_files/cocktail ({}).json", 1, 41)
 
-with st.sidebar:
-    alcohol_content = st.slider('alcohol level : ', 0, 61, 1)
-    sweetness = st.slider('select sweetness you want', 1, 5, 1)
-    sourness = st.slider('select sour taste you want', 1, 5, 1)
-    heaviness = st.slider('select heaviness of drink', 1, 5, 1)
-    ingredients = st.multiselect(
-        'What ingredients do you want to taste?',
-        categories
-    )
-    clicked = st.button('recommend')
-if clicked:
-    ### predict
+# Initialize session state
+initialize_session_state()
 
-    ### get drink from mongo db
-
-    ### for debug
-    file_path = './backend/data_works/preprocessed_alcohol.csv'
-    random_integers = np.random.randint(1, 545, size=10)
-    ### outputs
-    show_v2(file_path, random_integers)
-
+# Main app logic
+if st.session_state.page == 0:
+    handle_welcome_page(welcome_animations)
+elif st.session_state.page == 1:
+    handle_drink_type_page()
+elif st.session_state.page == 2:
+    handle_flavor_preference_page()
+elif st.session_state.page == 3:
+    handle_ingredient_selection_page(top_ingredients_list, loading_animations)
+elif st.session_state.page == 4:
+    show_loading_page()
+elif st.session_state.page == 5:
+    if 'cocktail' in st.session_state:
+        show_recommendation(st.session_state.cocktail, cocktail_animations)
