@@ -84,7 +84,7 @@ class CocktailEmbeddingMaker:
     def calculate_recipe_taste_weights(self, recipe):
         recipe_ingredients = [d for d in self.flavor_data if d['name'] in list(recipe.keys())]
         total_amount = sum(recipe.values())
-        print(f"Total Amount: {total_amount} , Recipe: {recipe}")
+        # print(f"Total Amount: {total_amount} , Recipe: {recipe}")
         ingredient_ratios = {ingredient: amount / total_amount for ingredient, amount in recipe.items()}
         recipe_taste_weights = {}
         for ingredient, ratio in ingredient_ratios.items():
@@ -127,7 +127,7 @@ class CocktailEmbeddingMaker:
             else:
                 recipe_taste_weights = self.calculate_recipe_taste_weights(cocktail_recipe)
                 recipe_taste_weights.pop('ID')
-                print(f"[get_taste_info]recipe_taste_weights : {recipe_taste_weights}")
+                # print(f"[get_taste_info]recipe_taste_weights : {recipe_taste_weights}")
                 return recipe_taste_weights
             
     def create_combined_embedding_list(self):
@@ -150,10 +150,66 @@ class CocktailEmbeddingMaker:
             if ingredient_info:
                 total_abv += ingredient_info['ABV'] * (quantity / total_amount)
         return total_abv
-class Eval(CocktailEmbeddingMaker):
-    def __init__(self,json_data, flavor_data, total_amount=200):
+    
+class Inference(CocktailEmbeddingMaker):
+    def __init__(self,json_data, flavor_data,model, total_amount=200):
         super().__init__(json_data, flavor_data, total_amount=200)
-        self.model = None
+        self.model = model
+    def test_case_with_random_seed(self, test_user):
+        seed_ingredient=random.choice(list(self.ingredient_ids.keys()))
+        generated_recipes = self.generate_recipe(seed_ingredient,test_user)
+        recipe_profile=self.get_taste_log(generated_recipes)
+        return recipe_profile
+    def test_case_with_user_seed(self, test_user, seed_ingredient):
+        generated_recipes = self.generate_recipe(seed_ingredient,test_user)
+        recipe_profile=self.get_taste_log(generated_recipes)
+        return recipe_profile
+    def get_taste_log(self,generated_recipe):
+        recipe = {}
+        for item, quantity_ratio in zip(generated_recipe[0], generated_recipe[1]):
+            recipe[item] = quantity_ratio * self.total_amount
+            #재료-양 완성 
+        #레시피의 맛 프로파일 생성
+        recipe_taste = self.get_taste_info(recipe)
+        return recipe_taste
+    def get_taste_info(self,cocktail_recipe):
+        recipe_taste_weights = None
+        for ingredient in cocktail_recipe.keys():
+            if ingredient not in self.ingredient_ids:
+                print(f"Ingredient '{ingredient}' not found in ingredient_ids")
+            else:
+                recipe_taste_weights = self.calculate_recipe_taste_weights(cocktail_recipe)
+                recipe_taste_weights.pop('ID')
+            return recipe_taste_weights
+    def generate_recipe(self, seed_ingredient, user_preference, max_length=10):
+        generated_recipe = [seed_ingredient]
+        for _ in range(max_length - 1):
+            sequence = [self.ingredient_ids[self.normalize_string(ingredient)] for ingredient in generated_recipe]
+            sequence = tf.keras.preprocessing.sequence.pad_sequences([sequence], maxlen=self.max_recipe_length)
+
+            probabilities = self.model.predict(sequence)[0]
+            probabilities[sequence[0]] = 0  # 중복 재료 제거
+
+            # 사용자 선호도를 반영하여 재료 선택 확률 조정
+            for ingredient_id, prob in enumerate(probabilities):
+                ingredient_name = list(self.ingredient_ids.keys())[list(self.ingredient_ids.values()).index(ingredient_id)]
+                ingredient_taste_score = self.get_ingredient_taste_score(ingredient_name, user_preference)
+                ingredient_abv = self.get_ingredient_abv(ingredient_name)
+                abv_diff = abs(ingredient_abv - user_preference['ABV'])
+                abv_score = 1 / (1 + abv_diff)  # 도수 차이가 작을수록 높은 점수
+                probabilities[ingredient_id] *= ingredient_taste_score * abv_score
+
+            next_ingredient_id = np.argmax(probabilities)
+            next_ingredient = list(self.ingredient_ids.keys())[list(self.ingredient_ids.values()).index(next_ingredient_id)]
+            generated_recipe.append(next_ingredient)
+        # 레시피 도수 계산 및 재료 양 조정
+        target_abv = user_preference['ABV']
+        quantities = self.adjust_ingredient_quantities(generated_recipe, target_abv)
+        return generated_recipe, quantities
+class Eval(CocktailEmbeddingMaker):
+    def __init__(self,json_data, flavor_data,model, total_amount=200):
+        super().__init__(json_data, flavor_data, total_amount=200)
+        self.model = model
     def evaluate_model(self,model, test_user_list, num_recipes=100):
         self.model = model
         similarity_list= []
@@ -259,7 +315,7 @@ class Eval(CocktailEmbeddingMaker):
             #재료-양 완성 
         #레시피의 맛 프로파일 생성
         recipe_taste = self.get_taste_info(recipe)
-        print("Recipe Taste Profile:", recipe_taste)
+        # print("Recipe Taste Profile:", recipe_taste)
         #생성 레시피 맛 프로파일과 사용자 선호도 간의 맛 일치도 계산
         taste_differences = []
         for taste, user_score in user_preference.items():
