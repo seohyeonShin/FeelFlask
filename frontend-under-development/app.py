@@ -36,10 +36,10 @@ elif st.session_state.page == 1:
 elif st.session_state.page == 2:
     handle_input_main_features_page(st.session_state.drink_type)
 elif st.session_state.page == 3:
-    handle_flavor_preference_page()
+    handle_flavor_preference_page(loading_animations)
 elif st.session_state.page == 4:
     show_loading_page()
 elif st.session_state.page == 5:
     if 'prediction_result' in st.session_state:
         show_recommendation(st.session_state.prediction_result,
-                            cocktail_animations, ind_to_flavor)
+                            cocktail_animations)

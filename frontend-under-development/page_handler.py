@@ -5,7 +5,6 @@ import requests
 import random
 import time
 from streamlit_lottie import st_lottie
-from PIL import Image
 
 
 def next_page():
@@ -146,13 +145,13 @@ def handle_input_main_features_page(drinktype): # input st.session_state.drink_t
             "spicy": spicy,
             "herbal": herbal
         }
-    st.session_state.main_feature_values = input_features
-    next_page()
+        st.session_state.main_feature_values = input_features
+        next_page()
 
 
 
 # fruity, nutty, floral의 값은 수치값이 아닌 그림 선택형으로 입력받습니다.
-def handle_flavor_preference_page():
+def handle_flavor_preference_page(loading_animations):
 
     st.markdown(
         """
@@ -212,11 +211,12 @@ def handle_flavor_preference_page():
         help="finishing the choice",
         use_container_width=True
     ):
-        input_features = st.session_state.main_feature_values
+        input_features= st.session_state.main_feature_values
         input_features['floral'] = floral
         input_features['fruity'] = fruity
         input_features['nutty'] = nutty
         st.session_state.main_feature_values = input_features
+        st.session_state.loading_animation = random.choice(loading_animations)
         next_page()
 
 def show_loading_page():
@@ -255,7 +255,10 @@ def show_loading_page():
     main_features['creamy'] = random.uniform(0, 1)*100
     main_features['smoky'] = random.uniform(0, 1)*100
     
-    response = requests.post('http://localhost:8000/predict/', json=main_features)
+    print("!!!!!!!!!!", main_features)
+
+    # response -> (recipe: result_recipe, profile: user_recipe_profile)인 딕셔너리임
+    response = requests.post('http://localhost:8000/predict', json=main_features)
 
     if response.status_code == 200:
         predict = response.json()
@@ -265,19 +268,19 @@ def show_loading_page():
         st.write("Failed to get a cocktail recommendation. Please try again later.")
 
 
-def show_recommendation(cocktail, cocktail_animations, ind_to_flavor):
+def show_recommendation(prediction, cocktail_animations):
     st.markdown(
         """
         <div style="text-align: center;">
             <h1>Your Cocktail Recommendation</h1>
             <h2></h2>
         </div>
-        """, 
+        """,
         unsafe_allow_html=True
     )
 
     # Calculate the height for the animation
-    num_ingredients = len(cocktail['recipe'])
+    num_ingredients = len(prediction['recipe'])
     base_height = 250
     additional_height_per_ingredient = 50
     animation_height = base_height + (num_ingredients * additional_height_per_ingredient)
@@ -297,7 +300,7 @@ def show_recommendation(cocktail, cocktail_animations, ind_to_flavor):
         with col2:
             st.markdown("<div style='text-align: center;'>", unsafe_allow_html=True)
             st.write("**Recommend Recipe:**")
-            for ingredient, amount in cocktail['recipe'].items():
+            for ingredient, amount in prediction['recipe'].items():
                 st.write(f"- {ingredient}: {amount}ml")
             st.markdown("</div>", unsafe_allow_html=True)
 
@@ -307,7 +310,7 @@ def show_recommendation(cocktail, cocktail_animations, ind_to_flavor):
         with col3:
             # Plot Recipe as a Pie Chart
             fig1, ax1 = plt.subplots()
-            ax1.pie(cocktail['recipe'].values(), labels=cocktail['recipe'].keys(), autopct='%1.1f%%', startangle=90)
+            ax1.pie(prediction['recipe'].values(), labels=prediction['recipe'].keys(), autopct='%1.1f%%', startangle=90)
             ax1.axis('equal')
             st.pyplot(fig1)
 
@@ -319,17 +322,10 @@ def show_recommendation(cocktail, cocktail_animations, ind_to_flavor):
             # Plot Combined Flavors as a Radar Chart
             fig2, ax2 = plt.subplots(subplot_kw={'projection': 'polar'})
 
-            cocktail_flavor = {}
-            sum_amounts = sum(cocktail['recipe'].values())
-            for key, amounts in enumerate(cocktail['recipe']):
-                for flavor, feature_value in ind_to_flavor[key].items():
-                    if flavor not in cocktail_flavor.keys(): # key is ingredient's unique index
-                        cocktail_flavor[flavor] = amounts * feature_value / sum_amounts
-                    else:
-                        cocktail_flavor[flavor] += amounts * feature_value / sum_amounts
+            recipe_profile = prediction['profile']
 
-            labels = list(cocktail_flavor.keys())
-            values = list(cocktail_flavor.values())
+            labels = list(recipe_profile.keys())
+            values = list(recipe_profile.values())
             values += values[:1]
             theta = np.linspace(0.0, 2 * np.pi, len(labels), endpoint=False)
             theta = np.append(theta, theta[0])
