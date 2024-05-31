@@ -176,8 +176,8 @@ def handle_input_by_images_1(drinktype):
     # feature 순서 정보를 저장하는 dictionary 입니다. 이름으로 맵핑할 수 있어 공간에 직관적으로 접근할 수 있습니다.
     st.session_state.feature_to_index = feature_to_idx
 
-    # ABV 값의 범위는 0~60으로 기본값은 30.0입니다.
-    feature_dic['ABV'] = 30.0
+    # ABV 값의 범위는 0~60으로 기본값은 30.0입니다. 그러나 Non-Alcoholic인 경우를 고려해 0으로 초기화합니다.
+    feature_dic['ABV'] = 0.0
 
     # Alcoholic 이라면 ABV값을 입력받는 것이 필요합니다.
     if drinktype=="Alcoholic":
