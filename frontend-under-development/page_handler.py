@@ -644,7 +644,6 @@ def handle_input_seed_ingredient(loading_animations):
 
     if response.status_code == 200:
         seed_ingredient_list = response.json()
-        print(seed_ingredient_list)
     else:
         st.write("Failed to get a filtered ingredient list. Please try again later.")
 
@@ -753,7 +752,7 @@ def show_recommendation(prediction, cocktail_animations):
             st.markdown("<div style='text-align: center;'>", unsafe_allow_html=True)
             st.write("**Recommend Recipe:**")
             for ingredient, amount in prediction['recipe'].items():
-                st.write(f"- {ingredient}: {amount}ml")
+                st.write(f"- {ingredient}: {round(amount, 2)}ml")
             st.markdown("</div>", unsafe_allow_html=True)
 
     with tab2:
