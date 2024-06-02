@@ -737,4 +737,12 @@ def show_recommendation(prediction, cocktail_animations):
 
 
 def handle_feedback_page():
-    pass
+    st.title('How do you like this recommendation?')
+    
+    
+    
+    col1, col2, col3 = st.columns([3, 1, 3])
+    with col2:
+        if st.button("Restart", key="restart", type='primary'):
+            st.session_state.page = 0
+            st.rerun()
