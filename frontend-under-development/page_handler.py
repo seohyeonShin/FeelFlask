@@ -72,7 +72,7 @@ def handle_drink_type_page():
     .element-container:has(#alcoholic_button_span) + div button {
         background-color: #ffb6c1; /* 파스텔 핑크 */
         color: white;
-        font-size: 30px;
+        font-size: 50;
         padding: 70px; /* 위아래로 길게 */
         border: none;
         border-radius: 50px;
@@ -91,7 +91,7 @@ def handle_drink_type_page():
     .element-container:has(#non_alcoholic_button_span) + div button {
         background-color: #c5e1a5; /* 파스텔 연두 */
         color: white;
-        font-size: 30px;
+        font-size: 50;
         padding: 70px; /* 위아래로 길게 */
         border: none;
         border-radius: 50px;
@@ -144,12 +144,13 @@ def handle_drink_type_page():
             st.session_state.drink_type = "Non_Alcoholic"
             next_page()
 
-    # Center the Restart button
-    st.markdown("<div style='text-align: center; margin-top: 20px;'>", unsafe_allow_html=True)
-    if st.button("Restart", key="restart"):
-        st.session_state.page = 0
-        st.rerun()
-    st.markdown("</div>", unsafe_allow_html=True)
+    for i in range(10):
+      col1, col2, col3 = st.columns([3, 1, 3])
+    
+    with col2:
+        if st.button("Restart", key="restart", type='primary'):
+            st.session_state.page = 0
+            st.rerun()
 
 
 # 여러 음식 아이콘을 보여주고, feature들을 입력받는 함수입니다.
@@ -268,12 +269,11 @@ def handle_input_by_images_1(drinktype):
         next_page()
 
 
-    # Center the Restart button
-    st.markdown("<div style='text-align: center; margin-top: 20px;'>", unsafe_allow_html=True)
-    if st.button("Restart", key="restart"):
-        st.session_state.page = 0
-        st.rerun()
-    st.markdown("</div>", unsafe_allow_html=True)
+    col1, col2, col3 = st.columns([3, 1, 3])
+    with col2:
+        if st.button("Restart", key="restart", type='primary'):
+            st.session_state.page = 0
+            st.rerun()
 
 
 def handle_input_by_images_2():
@@ -287,7 +287,7 @@ def handle_input_by_images_2():
         """,
         unsafe_allow_html=True
     )
-    st.write("select up to two ingredient on each row")
+    st.write("Choose one flavor from each row!")
 
     feature_dic = st.session_state.main_feature_values
     img_path_list = st.session_state.img_path_list
@@ -354,12 +354,11 @@ def handle_input_by_images_2():
         next_page()
 
 
-    # Center the Restart button
-    st.markdown("<div style='text-align: center; margin-top: 20px;'>", unsafe_allow_html=True)
-    if st.button("Restart", key="restart"):
-        st.session_state.page = 0
-        st.rerun()
-    st.markdown("</div>", unsafe_allow_html=True)
+    col1, col2, col3 = st.columns([3, 1, 3])
+    with col2:
+        if st.button("Restart", key="restart", type='primary'):
+            st.session_state.page = 0
+            st.rerun()
 
 
 def handle_input_by_images_3():
@@ -373,7 +372,7 @@ def handle_input_by_images_3():
         """,
         unsafe_allow_html=True
     )
-    st.write("select up to two ingredient on each row")
+    st.write("Choose one ingredient from each row!")
 
     feature_dic = st.session_state.main_feature_values
     img_path_list = st.session_state.img_path_list
@@ -450,12 +449,11 @@ def handle_input_by_images_3():
         next_page()
 
 
-    # Center the Restart button
-    st.markdown("<div style='text-align: center; margin-top: 20px;'>", unsafe_allow_html=True)
-    if st.button("Restart", key="restart"):
-        st.session_state.page = 0
-        st.rerun()
-    st.markdown("</div>", unsafe_allow_html=True)
+    col1, col2, col3 = st.columns([3, 1, 3])
+    with col2:
+        if st.button("Restart", key="restart", type='primary'):
+            st.session_state.page = 0
+            st.rerun()
 
 
 def handle_input_by_images_4():
@@ -517,12 +515,11 @@ def handle_input_by_images_4():
         print(feature_dic)
         next_page()
 
-    # Center the Restart button
-    st.markdown("<div style='text-align: center; margin-top: 20px;'>", unsafe_allow_html=True)
-    if st.button("Restart", key="restart"):
-        st.session_state.page = 0
-        st.rerun()
-    st.markdown("</div>", unsafe_allow_html=True)
+    col1, col2, col3 = st.columns([3, 1, 3])
+    with col2:
+        if st.button("Restart", key="restart", type='primary'):
+            st.session_state.page = 0
+            st.rerun()
 
 
 
@@ -589,13 +586,13 @@ def handle_input_seed_ingredient(loading_animations):
         st.session_state.main_feature_values = main_features
         next_page()
 
+    for i in range(3):
+      col1, col2, col3 = st.columns([3, 1, 3])
 
-    # Center the Restart button
-    st.markdown("<div style='text-align: center; margin-top: 20px;'>", unsafe_allow_html=True)
-    if st.button("Restart", key="restart"):
-        st.session_state.page = 0
-        st.rerun()
-    st.markdown("</div>", unsafe_allow_html=True)
+    with col2:
+        if st.button("Restart", key="restart", type='primary'):
+            st.session_state.page = 0
+            st.rerun()
 
 
 def show_loading_page():
@@ -728,28 +725,16 @@ def show_recommendation(prediction, cocktail_animations):
             ax2.set_xticklabels(labels)
             st.pyplot(fig2)
 
-    # Center the Restart button
-    st.markdown("<div style='text-align: center; margin-top: 20px;'>", unsafe_allow_html=True)
-    if st.button("Restart", key="restart"):
-        st.session_state.page = 0
-        st.rerun()
-    st.markdown("</div>", unsafe_allow_html=True)
+    if st.button('Feedback', key='feedback'):
+        next_page()
 
-    # CSS for button styling
-    st.markdown("""
-    <style>
-    .stButton button {
-        background-color: #ff4081; /* 핑크계열 빨강 */
-        color: white;
-        font-size: 20px;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 12px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        transition: all 0.2s ease;
-    }
-    .stButton button:hover {
-        background-color: #e91e63;
-    }
-    </style>
-    """, unsafe_allow_html=True)
+    col1, col2, col3 = st.columns([3, 1, 3])
+    with col2:
+        if st.button("Restart", key="restart", type='primary'):
+            st.session_state.page = 0
+            st.rerun()
+
+
+
+def handle_feedback_page():
+    pass
