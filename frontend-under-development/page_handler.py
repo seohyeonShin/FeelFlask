@@ -72,7 +72,7 @@ def handle_drink_type_page():
     .element-container:has(#alcoholic_button_span) + div button {
         background-color: #ffb6c1; /* 파스텔 핑크 */
         color: white;
-        font-size: 24px;
+        font-size: 30px;
         padding: 70px; /* 위아래로 길게 */
         border: none;
         border-radius: 50px;
@@ -91,7 +91,7 @@ def handle_drink_type_page():
     .element-container:has(#non_alcoholic_button_span) + div button {
         background-color: #c5e1a5; /* 파스텔 연두 */
         color: white;
-        font-size: 24px;
+        font-size: 30px;
         padding: 70px; /* 위아래로 길게 */
         border: none;
         border-radius: 50px;
@@ -143,6 +143,13 @@ def handle_drink_type_page():
         ):
             st.session_state.drink_type = "Non_Alcoholic"
             next_page()
+
+    # Center the Restart button
+    st.markdown("<div style='text-align: center; margin-top: 20px;'>", unsafe_allow_html=True)
+    if st.button("Restart", key="restart"):
+        st.session_state.page = 0
+        st.rerun()
+    st.markdown("</div>", unsafe_allow_html=True)
 
 
 # 여러 음식 아이콘을 보여주고, feature들을 입력받는 함수입니다.
@@ -289,6 +296,15 @@ def handle_input_by_images_1(drinktype):
         print(feature_dic)
         next_page()
 
+
+    # Center the Restart button
+    st.markdown("<div style='text-align: center; margin-top: 20px;'>", unsafe_allow_html=True)
+    if st.button("Restart", key="restart"):
+        st.session_state.page = 0
+        st.rerun()
+    st.markdown("</div>", unsafe_allow_html=True)
+
+
 def handle_input_by_images_2():
 
     st.markdown(
@@ -395,6 +411,14 @@ def handle_input_by_images_2():
         st.session_state.main_feature_values = feature_dic
         print(feature_dic)
         next_page()
+
+
+    # Center the Restart button
+    st.markdown("<div style='text-align: center; margin-top: 20px;'>", unsafe_allow_html=True)
+    if st.button("Restart", key="restart"):
+        st.session_state.page = 0
+        st.rerun()
+    st.markdown("</div>", unsafe_allow_html=True)
 
 
 def handle_input_by_images_3():
@@ -527,6 +551,15 @@ def handle_input_by_images_3():
         print(feature_dic)
         next_page()
 
+
+    # Center the Restart button
+    st.markdown("<div style='text-align: center; margin-top: 20px;'>", unsafe_allow_html=True)
+    if st.button("Restart", key="restart"):
+        st.session_state.page = 0
+        st.rerun()
+    st.markdown("</div>", unsafe_allow_html=True)
+
+
 def handle_input_by_images_4():
 
     st.markdown(
@@ -615,6 +648,15 @@ def handle_input_by_images_4():
         next_page()
 
 
+    # Center the Restart button
+    st.markdown("<div style='text-align: center; margin-top: 20px;'>", unsafe_allow_html=True)
+    if st.button("Restart", key="restart"):
+        st.session_state.page = 0
+        st.rerun()
+    st.markdown("</div>", unsafe_allow_html=True)
+
+
+
 def handle_input_seed_ingredient(loading_animations):
 
     st.markdown(
@@ -678,6 +720,15 @@ def handle_input_seed_ingredient(loading_animations):
         st.session_state.main_feature_values = main_features
         next_page()
 
+
+    # Center the Restart button
+    st.markdown("<div style='text-align: center; margin-top: 20px;'>", unsafe_allow_html=True)
+    if st.button("Restart", key="restart"):
+        st.session_state.page = 0
+        st.rerun()
+    st.markdown("</div>", unsafe_allow_html=True)
+
+
 def show_loading_page():
     # Scroll to the top of the page
     st.markdown("""
@@ -717,6 +768,33 @@ def show_loading_page():
         next_page()
     else:
         st.write("Failed to get a cocktail recommendation. Please try again later.")
+
+        # Center the Restart button
+        st.markdown("<div style='text-align: center; margin-top: 20px;'>", unsafe_allow_html=True)
+        if st.button("Restart", key="restart"):
+            st.session_state.page = 0
+            st.rerun()
+        st.markdown("</div>", unsafe_allow_html=True)
+
+        # CSS for button styling
+        st.markdown("""
+        <style>
+        .stButton button {
+            background-color: #ff4081; /* 핑크계열 빨강 */
+            color: white;
+            font-size: 20px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+        }
+        .stButton button:hover {
+            background-color: #e91e63;
+        }
+        </style>
+        """, unsafe_allow_html=True)
+
 
 
 def show_recommendation(prediction, cocktail_animations):
