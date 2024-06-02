@@ -72,7 +72,7 @@ def handle_drink_type_page():
     .element-container:has(#alcoholic_button_span) + div button {
         background-color: #ffb6c1; /* 파스텔 핑크 */
         color: white;
-        font-size: 24px;
+        font-size: 50;
         padding: 70px; /* 위아래로 길게 */
         border: none;
         border-radius: 50px;
@@ -91,7 +91,7 @@ def handle_drink_type_page():
     .element-container:has(#non_alcoholic_button_span) + div button {
         background-color: #c5e1a5; /* 파스텔 연두 */
         color: white;
-        font-size: 24px;
+        font-size: 50;
         padding: 70px; /* 위아래로 길게 */
         border: none;
         border-radius: 50px;
@@ -143,6 +143,14 @@ def handle_drink_type_page():
         ):
             st.session_state.drink_type = "Non_Alcoholic"
             next_page()
+
+    for i in range(10):
+      col1, col2, col3 = st.columns([3, 1, 3])
+    
+    with col2:
+        if st.button("Restart", key="restart", type='primary'):
+            st.session_state.page = 0
+            st.rerun()
 
 
 # 여러 음식 아이콘을 보여주고, feature들을 입력받는 함수입니다.
@@ -216,53 +224,20 @@ def handle_input_by_images_1(drinktype):
     col1, col2, col3  = st.columns([1, 1, 1])
     with col1:
         st.markdown(img_to_html(img_path_list[png_to_idx['lemon']]), unsafe_allow_html=True)
-        if st.button(
-            "Lemon",
-            key="lemon_button",
-            help="Add Sourness to your Drink",
-            use_container_width=True
-        ):
-            st.session_state.choice = "lemon"
     with col2:
         st.markdown(img_to_html(img_path_list[png_to_idx['lime']]), unsafe_allow_html=True)
-        if st.button(
-            "Lime",
-            key="lime_button",
-            help="Add Sourness to your Drink",
-            use_container_width=True
-        ):
-            st.session_state.choice = "lime"
-
     with col3:
         st.markdown(img_to_html(img_path_list[png_to_idx['grapefruit']]), unsafe_allow_html=True)
-        if st.button(
-            "GrapeFruit",
-            key="grapefruit_button",
-            help="Add Sourness to your Drink",
-            use_container_width=True
-        ):
-            st.session_state.choice = "grapefruit"
 
     col4, col5 = st.columns([1, 1])
     with col4:
         st.markdown(img_to_html(img_path_list[png_to_idx['honey']]), unsafe_allow_html=True)
-        if st.button(
-            "Honey",
-            key="honey_button",
-            help="Add Sweetness to your Drink",
-            use_container_width=True
-        ):
-            st.session_state.choice = "honey"
-
     with col5:
         st.markdown(img_to_html(img_path_list[png_to_idx['candy']]), unsafe_allow_html=True)
-        if st.button(
-            "Candy",
-            key="candy_button",
-            help="Add Sweetness to your Drink",
-            use_container_width=True
-        ):
-            st.session_state.choice = "candy"
+
+    # selectbox를 이용하여 flavor를 선택합니다.
+    st.session_state.choice = st.selectbox("Choose Your Flavor!", ["lemon", "lime", "grapefruit", "honey", "candy", "None"],
+                                           key = 'select flavor')
 
     # Get Recipe 버튼을 누르면 다음 페이지로 넘어가며, update된 feature dictionary를 업데이트 합니다.
     if st.button("Get Recipe"):
@@ -283,11 +258,23 @@ def handle_input_by_images_1(drinktype):
             value_selection = [25, -10, -10, -5, -5, -15, -5, -5, 0, 5, 0, 0]
         elif choice == "candy":
             value_selection = [25, 5, -5, -15, -5, -10, -10, -10, 0, 0, 0, 0]
+        elif choice == "None":
+            pass
+        else:
+            print("----!Invalid Choice!----")
 
         feature_dic = update_feature(feature_dic, feature_selection, value_selection)
         st.session_state.main_feature_values = feature_dic
         print(feature_dic)
         next_page()
+
+
+    col1, col2, col3 = st.columns([3, 1, 3])
+    with col2:
+        if st.button("Restart", key="restart", type='primary'):
+            st.session_state.page = 0
+            st.rerun()
+
 
 def handle_input_by_images_2():
 
@@ -300,7 +287,7 @@ def handle_input_by_images_2():
         """,
         unsafe_allow_html=True
     )
-    st.write("select up to two ingredient on each row")
+    st.write("Choose one flavor from each row!")
 
     feature_dic = st.session_state.main_feature_values
     img_path_list = st.session_state.img_path_list
@@ -313,56 +300,18 @@ def handle_input_by_images_2():
     col1, col2, col3  = st.columns([1, 1, 1])
     with col1:
         st.markdown(img_to_html(img_path_list[png_to_idx['bonfire']]), unsafe_allow_html=True)
-        if st.button(
-            "Bonfire",
-            key="bonfire_button",
-            help="Add smoky flavor to your Drink",
-            use_container_width=True
-        ):
-            st.session_state.choice = 'bonfire'
         st.markdown(img_to_html(img_path_list[png_to_idx['milk']]), unsafe_allow_html=True)
-        if st.button(
-            "Milk",
-            key="milk_button",
-            help="Add creamy flavor to your Drink",
-            use_container_width=True
-        ):
-            st.session_state.choice2 = 'milk'
+
     with col2:
         st.markdown(img_to_html(img_path_list[png_to_idx['pepper']]), unsafe_allow_html=True)
-        if st.button(
-            "Pepper",
-            key="pepper_button",
-            help="Add spicy flavor to your Drink",
-            use_container_width=True
-        ):
-            st.session_state.choice = 'pepper'
         st.markdown(img_to_html(img_path_list[png_to_idx['ice_cream']]), unsafe_allow_html=True)
-        if st.button(
-            "Ice Cream",
-            key="ice_cream_button",
-            help="Add creamy and sweet flavor to your Drink",
-            use_container_width=True
-        ):
-            st.session_state.choice2 = 'ice_cream'
 
     with col3:
         st.markdown(img_to_html(img_path_list[png_to_idx['pepper_hot']]), unsafe_allow_html=True)
-        if st.button(
-            "Hot Pepper",
-            key="hot_pepper_button",
-            help="Add very spicy flavor to your Drink",
-            use_container_width=True
-        ):
-            st.session_state.choice = 'pepper_hot'
         st.markdown(img_to_html(img_path_list[png_to_idx['chocolate']]), unsafe_allow_html=True)
-        if st.button(
-            "Chocolate",
-            key="chocolate_button",
-            help="Add sweet and sour flavor to your Drink",
-            use_container_width=True
-        ):
-            st.session_state.choice2 = 'chocolate'
+
+    st.session_state.choice = st.selectbox("Choose Your Flavor 1", ['bonfire', 'pepper', 'hot pepper', 'None'], key='select flavor 1')
+    st.session_state.choice2 = st.selectbox("Choose Your Flavor 2", ['milk', 'ice cream', 'chocolate', 'None'], key='select flavor 2')
 
     # Get Recipe 버튼을 누르면 다음 페이지로 넘어가며, update된 feature dictionary를 업데이트 합니다.
     if st.button("Get Recipe"):
@@ -380,21 +329,36 @@ def handle_input_by_images_2():
             value_selection = [0, 0, 0, -10, 0, 30, 0, 0, 5, -5, 0, 5]
         elif choice == "pepper":
             value_selection = [0, 5, 15, 0, 10, -10, 5, 0, -10, -10, 20, 0]
-        elif choice == "pepper_hot":
+        elif choice == "hot pepper":
             value_selection = [0, 5, 20, 0, 10, -10, 5, 0, -10, -10, 30, 0]
+        elif choice == "None":
+            pass
+        else:
+            print("----!Invalid Choice 1!----")
 
         if choice2 == "milk":
             value_selection2 = [0, 0, 0, 0, 10, -5, 0, 0, 0, 30, -10, -5]
-        elif choice2 == "ice_cream":
+        elif choice2 == "ice cream":
             value_selection2 = [25, -10, -10, -5, -10, -10, 0, 0, 0, 25, 0, 10]
         elif choice2 == "chocolate":
             value_selection2 = [25, -5, -5, -5, -10, 0, 0, 0, 0, -10, 0, 0]
+        elif choice == "None":
+            pass
+        else:
+            print("----!Invalid Choice 2!----")
 
         feature_dic = update_feature(feature_dic, feature_selection, value_selection)
         feature_dic = update_feature(feature_dic, feature_selection, value_selection2)
         st.session_state.main_feature_values = feature_dic
         print(feature_dic)
         next_page()
+
+
+    col1, col2, col3 = st.columns([3, 1, 3])
+    with col2:
+        if st.button("Restart", key="restart", type='primary'):
+            st.session_state.page = 0
+            st.rerun()
 
 
 def handle_input_by_images_3():
@@ -408,7 +372,7 @@ def handle_input_by_images_3():
         """,
         unsafe_allow_html=True
     )
-    st.write("select up to two ingredient on each row")
+    st.write("Choose one ingredient from each row!")
 
     feature_dic = st.session_state.main_feature_values
     img_path_list = st.session_state.img_path_list
@@ -421,74 +385,23 @@ def handle_input_by_images_3():
     col1, col2, col3, col4  = st.columns([1, 1, 1, 1])
     with col1:
         st.markdown(img_to_html(img_path_list[png_to_idx['mint']]), unsafe_allow_html=True)
-        if st.button(
-            "Mint",
-            key="mint_button",
-            help="Add strong herbal flavor to your Drink",
-            use_container_width=True
-        ):
-            st.session_state.choice = 'mint'
         st.markdown(img_to_html(img_path_list[png_to_idx['pretzel']]), unsafe_allow_html=True)
-        if st.button(
-            "Pretzel",
-            key="pretzel_button",
-            help="Add salty and nutty flavor to your Drink",
-            use_container_width=True
-        ):
-            st.session_state.choice2 = 'pretzel'
+
     with col2:
         st.markdown(img_to_html(img_path_list[png_to_idx['basil']]), unsafe_allow_html=True)
-        if st.button(
-            "Basil",
-            key="basil_button",
-            help="Add weak herbal flavor to your Drink",
-            use_container_width=True
-        ):
-            st.session_state.choice = 'basil'
         st.markdown(img_to_html(img_path_list[png_to_idx['salt']]), unsafe_allow_html=True)
-        if st.button(
-            "Salt",
-            key="salt_button",
-            help="Add strong salty flavor to your Drink",
-            use_container_width=True
-        ):
-            st.session_state.choice2 = 'salt'
 
     with col3:
         st.markdown(img_to_html(img_path_list[png_to_idx['coffee_beans']]), unsafe_allow_html=True)
-        if st.button(
-            "Coffee Beans",
-            key="coffee_bean_button",
-            help="Add bitter and smoky flavor to your Drink",
-            use_container_width=True
-        ):
-            st.session_state.choice = 'coffee_beans'
         st.markdown(img_to_html(img_path_list[png_to_idx['almond']]), unsafe_allow_html=True)
-        if st.button(
-            "Almond",
-            key="almond_button",
-            help="Add strong nutty flavor to your Drink",
-            use_container_width=True
-        ):
-            st.session_state.choice2 = 'almond'
     
     with col4:
         st.markdown(img_to_html(img_path_list[png_to_idx['dark_chocolate']]), unsafe_allow_html=True)
-        if st.button(
-            "Dark Chocolate",
-            key="dark_chocolate_button",
-            help="Add strong bitter flavor to your Drink",
-            use_container_width=True
-        ):
-            st.session_state.choice = 'dark_chocolate'
         st.markdown(img_to_html(img_path_list[png_to_idx['pistachio']]), unsafe_allow_html=True)
-        if st.button(
-            "Pistachio",
-            key="pistachio_button",
-            help="Add nutty flavor to your Drink",
-            use_container_width=True
-        ):
-            st.session_state.choice2 = 'pistachio'
+
+    
+    st.session_state.choice = st.selectbox("Choose Your Flavor 1", ['mint', 'basil', 'coffee beans', 'dark chocolate', 'None'], key='select flavor 1')
+    st.session_state.choice2 = st.selectbox("Choose Your Flavor 2", ['pretzel', 'salt', 'almond', 'pistachio', 'None'], key='select flavor 2')
     
 
     # Get Recipe 버튼을 누르면 다음 페이지로 넘어가며, update된 feature dictionary를 업데이트 합니다.
@@ -507,10 +420,14 @@ def handle_input_by_images_3():
             value_selection = [0, 0, 0, 0, 0, -10, 25, 25, -10, 0, 10, 0]
         elif choice == "basil":
             value_selection = [0, 0, 5, 0, 0, -5, 15, 15, -5, 0, 5, 0]
-        elif choice == "coffee_beans":
+        elif choice == "coffee beans":
             value_selection = [0, 0, 10, 0, 0, 20, 10, 0, 5, 0, 0, 0]
-        elif choice == "dark_chocolate":
+        elif choice == "dark chocolate":
             value_selection = [0, 0, 20, 0, 0, 0, 5, 0, 0, 0, 0, 0]
+        elif choice == "None":
+            pass
+        else:
+            print("----!Invalid Choice 1!----")
 
         if choice2 == "pretzel":
             value_selection2 = [0, 0, 0, -5, 0, 10, -5, -5, 10, -5, 0, 15]
@@ -518,14 +435,26 @@ def handle_input_by_images_3():
             value_selection2 = [0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 5, 25]
         elif choice2 == "almond":
             value_selection2 = [0, 0, 0, -10, -5, 10, -5, -5, 25, 0, 0, 0]
-        elif choice2 == "pastachio":
+        elif choice2 == "pistachio":
             value_selection2 = [0, 0, 5, 0, 0, 10, 0, 0, 15, 0, 5, 0]
+        elif choice2 == "None":
+            pass
+        else:
+            print("----!Invalid Choice 2!----")
 
         feature_dic = update_feature(feature_dic, feature_selection, value_selection)
         feature_dic = update_feature(feature_dic, feature_selection, value_selection2)
         st.session_state.main_feature_values = feature_dic
         print(feature_dic)
         next_page()
+
+
+    col1, col2, col3 = st.columns([3, 1, 3])
+    with col2:
+        if st.button("Restart", key="restart", type='primary'):
+            st.session_state.page = 0
+            st.rerun()
+
 
 def handle_input_by_images_4():
 
@@ -550,46 +479,14 @@ def handle_input_by_images_4():
     col1, col2, col3, col4  = st.columns([1, 1, 1, 1])
     with col1:
         st.markdown(img_to_html(img_path_list[png_to_idx['rose']]), unsafe_allow_html=True)
-        if st.button(
-            "Rose",
-            key="rose_button",
-            help="Add strong floral flavor to your Drink",
-            use_container_width=True
-        ):
-            st.session_state.choice = 'rose'
-
     with col2:
         st.markdown(img_to_html(img_path_list[png_to_idx['lavender']]), unsafe_allow_html=True)
-        if st.button(
-            "Lavender",
-            key="lavender_button",
-            help="Add strong herbal and floral flavor to your Drink",
-            use_container_width=True
-        ):
-            st.session_state.choice = 'lavender'
-
-
     with col3:
         st.markdown(img_to_html(img_path_list[png_to_idx['cola']]), unsafe_allow_html=True)
-        if st.button(
-            "Coca-cola",
-            key="cola button",
-            help="Add sweet and spicy flavor to your Drink",
-            use_container_width=True
-        ):
-            st.session_state.choice = 'cola'
-
-
     with col4:
         st.markdown(img_to_html(img_path_list[png_to_idx['champagne']]), unsafe_allow_html=True)
-        if st.button(
-            "Champagne",
-            key="champagne_button",
-            help="Add weak floral flavor to your Drink",
-            use_container_width=True
-        ):
-            st.session_state.choice = 'champagne'
 
+    st.session_state.choice = st.selectbox("Choose Your Flavor!", ['rose', 'lavender', 'coca-cola', 'champagne', 'None'], key='select flavor')
 
     # Get Recipe 버튼을 누르면 다음 페이지로 넘어가며, update된 feature dictionary를 업데이트 합니다.
     if st.button("Get Recipe"):
@@ -604,15 +501,26 @@ def handle_input_by_images_4():
             value_selection = [0, 0, 0, -5, 5, -10, 15, 20, -10, 0, 0, 0]
         elif choice == "lavender":
             value_selection = [0, 0, 0, -5, 5, -10, 25, 15, -10, 0, 0, 0]
-        elif choice == "cola":
+        elif choice == "coca-cola":
             value_selection = [20, 10, 5, -5, 10, -15, -10, -10, -10, 5, 15, 10]
         elif choice == "champagne":
             value_selection = [0, 0, 0, 0, 5, -10, 0, 5, -10, -5, 0, 0]
+        elif choice == "None":
+            pass
+        else:
+            print("----!Invalid Choice!----")
 
         feature_dic = update_feature(feature_dic, feature_selection, value_selection)
         st.session_state.main_feature_values = feature_dic
         print(feature_dic)
         next_page()
+
+    col1, col2, col3 = st.columns([3, 1, 3])
+    with col2:
+        if st.button("Restart", key="restart", type='primary'):
+            st.session_state.page = 0
+            st.rerun()
+
 
 
 def handle_input_seed_ingredient(loading_animations):
@@ -678,6 +586,15 @@ def handle_input_seed_ingredient(loading_animations):
         st.session_state.main_feature_values = main_features
         next_page()
 
+    for i in range(3):
+      col1, col2, col3 = st.columns([3, 1, 3])
+
+    with col2:
+        if st.button("Restart", key="restart", type='primary'):
+            st.session_state.page = 0
+            st.rerun()
+
+
 def show_loading_page():
     # Scroll to the top of the page
     st.markdown("""
@@ -717,6 +634,33 @@ def show_loading_page():
         next_page()
     else:
         st.write("Failed to get a cocktail recommendation. Please try again later.")
+
+        # Center the Restart button
+        st.markdown("<div style='text-align: center; margin-top: 20px;'>", unsafe_allow_html=True)
+        if st.button("Restart", key="restart"):
+            st.session_state.page = 0
+            st.rerun()
+        st.markdown("</div>", unsafe_allow_html=True)
+
+        # CSS for button styling
+        st.markdown("""
+        <style>
+        .stButton button {
+            background-color: #ff4081; /* 핑크계열 빨강 */
+            color: white;
+            font-size: 20px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+        }
+        .stButton button:hover {
+            background-color: #e91e63;
+        }
+        </style>
+        """, unsafe_allow_html=True)
+
 
 
 def show_recommendation(prediction, cocktail_animations):
@@ -781,28 +725,24 @@ def show_recommendation(prediction, cocktail_animations):
             ax2.set_xticklabels(labels)
             st.pyplot(fig2)
 
-    # Center the Restart button
-    st.markdown("<div style='text-align: center; margin-top: 20px;'>", unsafe_allow_html=True)
-    if st.button("Restart", key="restart"):
-        st.session_state.page = 0
-        st.rerun()
-    st.markdown("</div>", unsafe_allow_html=True)
+    if st.button('Feedback', key='feedback'):
+        next_page()
 
-    # CSS for button styling
-    st.markdown("""
-    <style>
-    .stButton button {
-        background-color: #ff4081; /* 핑크계열 빨강 */
-        color: white;
-        font-size: 20px;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 12px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        transition: all 0.2s ease;
-    }
-    .stButton button:hover {
-        background-color: #e91e63;
-    }
-    </style>
-    """, unsafe_allow_html=True)
+    col1, col2, col3 = st.columns([3, 1, 3])
+    with col2:
+        if st.button("Restart", key="restart", type='primary'):
+            st.session_state.page = 0
+            st.rerun()
+
+
+
+def handle_feedback_page():
+    st.title('How do you like this recommendation?')
+    
+    
+    
+    col1, col2, col3 = st.columns([3, 1, 3])
+    with col2:
+        if st.button("Restart", key="restart", type='primary'):
+            st.session_state.page = 0
+            st.rerun()

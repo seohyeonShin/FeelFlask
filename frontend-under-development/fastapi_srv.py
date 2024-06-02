@@ -108,7 +108,7 @@ async def filter(features: Features):
             for ing_name, score in sorted_ingredient:
                 if flavor_dic[ing_name]['ABV'] == 0:
                     top_10_ingredient.append(ing_name)
-                count += 1
+                    count += 1
                 if count == 10: # 재료가 10번째가 되면 break합니다.
                     break
         else:

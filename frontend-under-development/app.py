@@ -37,3 +37,5 @@ elif st.session_state.page == 8:
     if 'prediction_result' in st.session_state:
         show_recommendation(st.session_state.prediction_result,
                             cocktail_animations)
+elif st.session_state.page == 9:
+    handle_feedback_page()
