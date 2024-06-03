@@ -52,7 +52,7 @@ class RecipeGenerationModel:
         model.compile(loss='categorical_crossentropy', optimizer=optimizer,metrics=['accuracy'])
         return model
 
-    def train(self, recipes,test_user_list, epochs=50, batch_size=32,learning_rate=0.001):
+    def train(self, recipes,test_user_list,perEpoch= True, epochs=50, batch_size=32,learning_rate=0.001):
         ingredient_sequences = []
         next_ingredients = []
 
@@ -74,8 +74,20 @@ class RecipeGenerationModel:
             optimizer = wandb.config.get('optimizer', 'adam')
             
         self.model = self.build_model()
-        for epoch in range(epochs):
-            history = self.model.fit(ingredient_sequences, next_ingredients, epochs=1, batch_size=batch_size, verbose=0)
+        if perEpoch:
+            for epoch in range(epochs):
+                history = self.model.fit(ingredient_sequences, next_ingredients, epochs=1, batch_size=batch_size, verbose=0)
+                loss = history.history['loss'][0]
+                accuracy = history.history['accuracy'][0]
+                if self.wandb:
+                    # wandb 로깅
+                    wandb.log({
+                        'epoch': epochs,
+                        'loss': loss,
+                        'accuracy': accuracy,
+                    })
+        else:
+            history = self.model.fit(ingredient_sequences, next_ingredients, epochs=epochs, batch_size=batch_size, verbose=0)
             loss = history.history['loss'][0]
             accuracy = history.history['accuracy'][0]
             if self.wandb:
