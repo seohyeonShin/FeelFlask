@@ -49,6 +49,13 @@ class FilteredIngredients(BaseModel):
     ingredients: List[str]
     flavor: Dict[str, Dict[str, float]]
 
+class Ratings(BaseModel):
+    rates: int
+
+@app.post('/db')
+async def db(rates: Ratings):
+    pass
+
 # 사용자의 profile을 입력으로, 가장 값이 높은 feature 3개를 뽑습니다.
 # 해당 feature들과 가장 유사한 값을 가지는 ingredient를 여러개 뽑아 list로 반환합니다.
 @app.post("/filter", response_model=FilteredIngredients)

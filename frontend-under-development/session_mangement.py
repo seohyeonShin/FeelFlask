@@ -32,6 +32,11 @@ def initialize_session_state():
     # loading animation을 미리 loading page 전 페이지에 선택하고 사용하기 위한 변수
     if 'loading_animation' not in st.session_state:
         st.session_state.loading_animation = None
+    # feedback_rating값을 저장합니다. 해당 값은 app.py의 connection을 통해 google sheet에 저장됩니다.
+    if 'feedback_ratings' not in st.session_state:
+        st.session_state.feedback_ratings = 0
+    if 'is_submit' not in st.session_state:
+        st.session_state.is_submit = False
 
 def load_lottie_files(pattern, start, end):
     files = []

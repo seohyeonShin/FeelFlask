@@ -3,6 +3,8 @@ import pandas as pd
 import random
 import tensorflow as tf
 import wandb
+
+
 class CocktailEmbeddingMaker:
     def __init__(self, json_data, flavor_data,category_data, total_amount=200):
         self.cocktail_info = json_data['cocktail_info']
@@ -37,6 +39,8 @@ class CocktailEmbeddingMaker:
                 ingredient_embedding_matrix[ingredient_id] = ingredient_embedding
         
         return ingredient_embedding_matrix
+    
+    
     def create_recipe_embedding_1(self, recipe):
         embedding_matrix = np.random.rand(self.num_ingredients, self.embedding_dim)
         total_amount = sum(recipe.values())
@@ -52,6 +56,7 @@ class CocktailEmbeddingMaker:
             weighted_embeddings.append(weighted_embedding)
         recipe_embedding = np.sum(weighted_embeddings, axis=0)
         return recipe_embedding
+    
     def create_recipe_embedding_2(self, recipe):
         ingredient_embedding_matrix = self.create_ingredient_embedding_matrix()
         
@@ -96,6 +101,7 @@ class CocktailEmbeddingMaker:
                         recipe_taste_weights[taste] = recipe_taste_weights.get(taste, 0) + weight * ratio
         return recipe_taste_weights
 
+
     def create_taste_embedding_list(self):
         taste_embeddings = dict()
         for cocktail in self.cocktail_info:
@@ -104,6 +110,8 @@ class CocktailEmbeddingMaker:
             recipe_taste_weights = self.calculate_recipe_taste_weights(recipe)
             taste_embeddings[name] = {'taste_embedding': np.array(list(recipe_taste_weights.values()))}
         return taste_embeddings
+    
+    
     def create_taste_embedding_pd(self):
         taste = dict()
         taste_embeddings = dict()
@@ -120,6 +128,7 @@ class CocktailEmbeddingMaker:
         # 데이터프레임 생성
         taste_embeddings = pd.DataFrame.from_dict(taste, orient='index', columns=attributes)
         return taste_embeddings
+    
     def get_taste_info(self,cocktail_recipe):
 
         for ingredient in cocktail_recipe.keys():
@@ -130,6 +139,7 @@ class CocktailEmbeddingMaker:
                 recipe_taste_weights.pop('ID')
                 # print(f"[get_taste_info]recipe_taste_weights : {recipe_taste_weights}")
                 return recipe_taste_weights
+            
             
     def create_combined_embedding_list(self):
         recipe_embeddings = self.create_recipe_embedding_list()
@@ -143,6 +153,8 @@ class CocktailEmbeddingMaker:
             }
 
         return combined_embeddings
+    
+    
     def calculate_recipe_abv(self, recipe, quantities):
         total_amount = sum(quantities)
         total_abv = 0
@@ -156,15 +168,18 @@ class Inference(CocktailEmbeddingMaker):
     def __init__(self,json_data, flavor_data,model, total_amount=200):
         super().__init__(json_data, flavor_data, total_amount=200)
         self.model = model
+        
     def test_case_with_random_seed(self, test_user):
         seed_ingredient=random.choice(list(self.ingredient_ids.keys()))
         generated_recipes = self.generate_recipe(seed_ingredient,test_user)
         recipe_profile=self.get_taste_log(generated_recipes)
         return recipe_profile
+    
     def test_case_with_user_seed(self, test_user, seed_ingredient):
         generated_recipes = self.generate_recipe(seed_ingredient,test_user)
         recipe_profile=self.get_taste_log(generated_recipes)
         return recipe_profile
+    
     def get_taste_log(self,generated_recipe):
         recipe = {}
         for item, quantity_ratio in zip(generated_recipe[0], generated_recipe[1]):
@@ -173,6 +188,7 @@ class Inference(CocktailEmbeddingMaker):
         #레시피의 맛 프로파일 생성
         recipe_taste = self.get_taste_info(recipe)
         return recipe_taste
+    
     def get_taste_info(self,cocktail_recipe):
         recipe_taste_weights = None
         for ingredient in cocktail_recipe.keys():
@@ -182,6 +198,7 @@ class Inference(CocktailEmbeddingMaker):
                 recipe_taste_weights = self.calculate_recipe_taste_weights(cocktail_recipe)
                 recipe_taste_weights.pop('ID')
             return recipe_taste_weights
+        
     def generate_recipe(self, seed_ingredient, user_preference, max_length=10):
         generated_recipe = [seed_ingredient]
         for _ in range(max_length - 1):
@@ -207,10 +224,14 @@ class Inference(CocktailEmbeddingMaker):
         target_abv = user_preference['ABV']
         quantities = self.adjust_ingredient_quantities(generated_recipe, target_abv)
         return generated_recipe, quantities
+    
+    
 class Eval(CocktailEmbeddingMaker):
+    
     def __init__(self,json_data, flavor_data,category_data,model, total_amount=200):
         super().__init__(json_data, flavor_data,category_data, total_amount=200)
         self.model = model
+        
     def evaluate_model(self,model, test_user_list, num_recipes=100):
         self.model = model
         similarity_list= []
@@ -247,6 +268,8 @@ class Eval(CocktailEmbeddingMaker):
         }
         
         return evaluation_metrics,recipe_profile_list
+    
+    
     def evaluate_similarity(self, generated_recipe):
         
         

@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 import streamlit as st
 import requests
 import random
@@ -8,6 +9,7 @@ from streamlit_lottie import st_lottie
 from PIL import Image
 import base64
 from pathlib import Path
+import json
 
 
 def update_feature(feature_dic, select_feature, value_list):
@@ -708,8 +710,32 @@ def show_recommendation(prediction, cocktail_animations):
             ax2.set_xticklabels(labels)
             st.pyplot(fig2)
 
-    if st.button('Feedback', key='feedback'):
-        next_page()
+    # create feedback slider for 1-5 feedback rating input
+    # 한번 submit하면 여러번 submit이 되도록 하면 안됩니다.
+    if not st.session_state.is_submit:
+        st.session_state.feedback_ratings = st.slider('How do you like this recommendation?', 1, 5)
+        if st.button("Submit Feedback"):
+
+            with open('./feedback/feedback.json', 'r') as f:
+                feedback = json.load(f)
+
+            ingredient_list = []
+            amount_list = []
+            for ing, amount in st.session_state.prediction_result['recipe'].items():
+                ingredient_list.append(ing)
+                amount_list.append(amount)
+
+            feedback['feedback_info'].append({"input_features": st.session_state.main_feature_values,
+                                            "output_ingredients": ingredient_list,
+                                            "output_amounts" : amount_list,
+                                            "feedback_rating": st.session_state.feedback_ratings})
+
+            with open('./feedback/feedback.json', 'w') as fw:
+                json.dump(feedback, fw)
+
+            st.write("Thanks!")
+            st.session_state.is_submit = True
+
 
     col1, col2, col3 = st.columns([3, 1, 3])
     with col2:
@@ -718,14 +744,13 @@ def show_recommendation(prediction, cocktail_animations):
             st.rerun()
 
 
+# def handle_feedback_page():
+#     st.title('How do you like this recommendation?')
 
-def handle_feedback_page():
-    st.title('How do you like this recommendation?')
-    
-    
-    
-    col1, col2, col3 = st.columns([3, 1, 3])
-    with col2:
-        if st.button("Restart", key="restart", type='primary'):
-            st.session_state.page = 0
-            st.rerun()
+#     feedback = st.slider('How do you like this recommendation?', 0, 5)
+
+#     col1, col2, col3 = st.columns([3, 1, 3])
+#     with col2:
+#         if st.button("Restart", key="restart", type='primary'):
+#             st.session_state.page = 0
+#             st.rerun()
