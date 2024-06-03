@@ -130,7 +130,9 @@ async def filter(features: Features):
         for ing_name in top_10_ingredient:
             top_10_flavor[ing_name] = {}
             for feature, value in flavor_dic[ing_name].items():
-                top_10_flavor[ing_name][feature] = value
+                # 몇몇 재료는 'ID' feature가 들어가 있습니다. flavor정보에 오류가 있어 보입니다.
+                if feature != "ID":
+                    top_10_flavor[ing_name][feature] = value
 
         return {"ingredients" : top_10_ingredient,
                 "flavor" : top_10_flavor}

@@ -37,6 +37,23 @@ def filter_feature(feature_dic):
                 feature_dic[key] = float(0)
     return feature_dic
 
+
+# restart 한다면 session_state를 다시 초기화 시켜 주어야 합니다.
+# 그래야 기존의 정보가 남아있지 않고, 초기화된 정보로 시작할 수 있습니다.
+def initialize_state():
+    st.session_state.page = 0
+    st.session_state.drink_type = None
+    st.session_state.main_feature_values = None
+    st.session_state.predict_result = None
+    st.session_state.feature_to_index = None
+    st.session_state.img_to_idx = None
+    st.session_state.img_path_list = None
+    st.session_state.choice = None
+    st.session_state.choice2 = None
+    st.session_state.loading_animation = None
+    st.session_state.feedback_ratings = 0
+    st.session_state.is_submit = False
+
 # 다음 페이지로 넘어가는 함수
 # st.session_state.page 값을 1 증가시키고, st.rerun()을 통해 다음 페이지로 넘어갑니다. (순서는 app.py 참고)
 def next_page():
@@ -151,7 +168,7 @@ def handle_drink_type_page():
     
     with col2:
         if st.button("Restart", key="restart", type='primary'):
-            st.session_state.page = 0
+            initialize_state()
             st.rerun()
 
 
@@ -274,7 +291,7 @@ def handle_input_by_images_1(drinktype):
     col1, col2, col3 = st.columns([3, 1, 3])
     with col2:
         if st.button("Restart", key="restart", type='primary'):
-            st.session_state.page = 0
+            initialize_state()
             st.rerun()
 
 
@@ -359,7 +376,7 @@ def handle_input_by_images_2():
     col1, col2, col3 = st.columns([3, 1, 3])
     with col2:
         if st.button("Restart", key="restart", type='primary'):
-            st.session_state.page = 0
+            initialize_state()
             st.rerun()
 
 
@@ -454,7 +471,7 @@ def handle_input_by_images_3():
     col1, col2, col3 = st.columns([3, 1, 3])
     with col2:
         if st.button("Restart", key="restart", type='primary'):
-            st.session_state.page = 0
+            initialize_state()
             st.rerun()
 
 
@@ -520,7 +537,7 @@ def handle_input_by_images_4():
     col1, col2, col3 = st.columns([3, 1, 3])
     with col2:
         if st.button("Restart", key="restart", type='primary'):
-            st.session_state.page = 0
+            initialize_state()
             st.rerun()
 
 
@@ -593,7 +610,7 @@ def handle_input_seed_ingredient(loading_animations):
 
     with col2:
         if st.button("Restart", key="restart", type='primary'):
-            st.session_state.page = 0
+            initialize_state()
             st.rerun()
 
 
@@ -643,7 +660,7 @@ def show_loading_page():
     col1, col2, col3 = st.columns([3, 1, 3])
     with col2:
         if st.button("Restart", key="restart", type='primary'):
-            st.session_state.page = 0
+            initialize_state()
             st.rerun()
 
 
@@ -740,7 +757,7 @@ def show_recommendation(prediction, cocktail_animations):
     col1, col2, col3 = st.columns([3, 1, 3])
     with col2:
         if st.button("Restart", key="restart", type='primary'):
-            st.session_state.page = 0
+            initialize_state()
             st.rerun()
 
 
