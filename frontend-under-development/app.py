@@ -5,6 +5,7 @@ from page_handler import *
 import json
 import numpy as np
 
+
 # Load Lottie animations
 welcome_animations = load_lottie_files("lottie_files/welcome ({}).json", 1, 10)
 loading_animations = load_lottie_files("lottie_files/loading ({}).json", 1, 10)
@@ -37,5 +38,7 @@ elif st.session_state.page == 8:
     if 'prediction_result' in st.session_state:
         show_recommendation(st.session_state.prediction_result,
                             cocktail_animations)
-elif st.session_state.page == 9:
-    handle_feedback_page()
+# elif st.session_state.page == 9:
+    # handle_feedback_page()
+
+# def push_data(inputs, pred_ingredients, pred_amounts, feedback):

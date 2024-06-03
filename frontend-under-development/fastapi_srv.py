@@ -17,6 +17,9 @@ with open('./train_data.json', 'r') as f:
 
 with open('./flavor.json', 'r') as f:
     flavor_data = json.load(f)
+    
+with open('./category.json', 'r') as f:
+    category_data = json.load(f)
 
 
 class Features(BaseModel):
@@ -45,6 +48,13 @@ class Recipe(BaseModel):
 class FilteredIngredients(BaseModel):
     ingredients: List[str]
     flavor: Dict[str, Dict[str, float]]
+
+class Ratings(BaseModel):
+    rates: int
+
+@app.post('/db')
+async def db(rates: Ratings):
+    pass
 
 # 사용자의 profile을 입력으로, 가장 값이 높은 feature 3개를 뽑습니다.
 # 해당 feature들과 가장 유사한 값을 가지는 ingredient를 여러개 뽑아 list로 반환합니다.
@@ -120,7 +130,9 @@ async def filter(features: Features):
         for ing_name in top_10_ingredient:
             top_10_flavor[ing_name] = {}
             for feature, value in flavor_dic[ing_name].items():
-                top_10_flavor[ing_name][feature] = value
+                # 몇몇 재료는 'ID' feature가 들어가 있습니다. flavor정보에 오류가 있어 보입니다.
+                if feature != "ID":
+                    top_10_flavor[ing_name][feature] = value
 
         return {"ingredients" : top_10_ingredient,
                 "flavor" : top_10_flavor}
@@ -153,13 +165,13 @@ async def predict(features: Features):
                           'smoky' : features.smoky,
                           }
         seed_ingredient = features.seed
-        eval_obj = Eval(json_data, flavor_data, model)
+        total_amount = 200 #ml
+        eval_obj = Eval(json_data, flavor_data, category_data, model, total_amount)
 
         recipe_length = 5
         generated_recipes = eval_obj.generate_recipe(seed_ingredient, input_features, recipe_length)
         result_recipe = {}
 
-        total_amount = 200 #ml
 
         for recipe, ingredients in zip(generated_recipes[0], generated_recipes[1]):
             result_recipe[recipe]= ingredients * total_amount

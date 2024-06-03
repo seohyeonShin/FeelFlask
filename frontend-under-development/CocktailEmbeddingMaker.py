@@ -3,12 +3,15 @@ import pandas as pd
 import random
 import tensorflow as tf
 import wandb
+
+
 class CocktailEmbeddingMaker:
-    def __init__(self, json_data, flavor_data, total_amount=200):
+    def __init__(self, json_data, flavor_data,category_data, total_amount=200):
         self.cocktail_info = json_data['cocktail_info']
         self.flavor_data = flavor_data
         self.total_amount = total_amount
         self.max_recipe_length=10
+        self.category_data = category_data
         self.init()
 
     def normalize_string(self, name):
@@ -36,6 +39,8 @@ class CocktailEmbeddingMaker:
                 ingredient_embedding_matrix[ingredient_id] = ingredient_embedding
         
         return ingredient_embedding_matrix
+    
+    
     def create_recipe_embedding_1(self, recipe):
         embedding_matrix = np.random.rand(self.num_ingredients, self.embedding_dim)
         total_amount = sum(recipe.values())
@@ -51,6 +56,7 @@ class CocktailEmbeddingMaker:
             weighted_embeddings.append(weighted_embedding)
         recipe_embedding = np.sum(weighted_embeddings, axis=0)
         return recipe_embedding
+    
     def create_recipe_embedding_2(self, recipe):
         ingredient_embedding_matrix = self.create_ingredient_embedding_matrix()
         
@@ -95,6 +101,7 @@ class CocktailEmbeddingMaker:
                         recipe_taste_weights[taste] = recipe_taste_weights.get(taste, 0) + weight * ratio
         return recipe_taste_weights
 
+
     def create_taste_embedding_list(self):
         taste_embeddings = dict()
         for cocktail in self.cocktail_info:
@@ -103,6 +110,8 @@ class CocktailEmbeddingMaker:
             recipe_taste_weights = self.calculate_recipe_taste_weights(recipe)
             taste_embeddings[name] = {'taste_embedding': np.array(list(recipe_taste_weights.values()))}
         return taste_embeddings
+    
+    
     def create_taste_embedding_pd(self):
         taste = dict()
         taste_embeddings = dict()
@@ -119,6 +128,7 @@ class CocktailEmbeddingMaker:
         # 데이터프레임 생성
         taste_embeddings = pd.DataFrame.from_dict(taste, orient='index', columns=attributes)
         return taste_embeddings
+    
     def get_taste_info(self,cocktail_recipe):
 
         for ingredient in cocktail_recipe.keys():
@@ -129,6 +139,7 @@ class CocktailEmbeddingMaker:
                 recipe_taste_weights.pop('ID')
                 # print(f"[get_taste_info]recipe_taste_weights : {recipe_taste_weights}")
                 return recipe_taste_weights
+            
             
     def create_combined_embedding_list(self):
         recipe_embeddings = self.create_recipe_embedding_list()
@@ -142,6 +153,8 @@ class CocktailEmbeddingMaker:
             }
 
         return combined_embeddings
+    
+    
     def calculate_recipe_abv(self, recipe, quantities):
         total_amount = sum(quantities)
         total_abv = 0
@@ -155,15 +168,18 @@ class Inference(CocktailEmbeddingMaker):
     def __init__(self,json_data, flavor_data,model, total_amount=200):
         super().__init__(json_data, flavor_data, total_amount=200)
         self.model = model
+        
     def test_case_with_random_seed(self, test_user):
         seed_ingredient=random.choice(list(self.ingredient_ids.keys()))
         generated_recipes = self.generate_recipe(seed_ingredient,test_user)
         recipe_profile=self.get_taste_log(generated_recipes)
         return recipe_profile
+    
     def test_case_with_user_seed(self, test_user, seed_ingredient):
         generated_recipes = self.generate_recipe(seed_ingredient,test_user)
         recipe_profile=self.get_taste_log(generated_recipes)
         return recipe_profile
+    
     def get_taste_log(self,generated_recipe):
         recipe = {}
         for item, quantity_ratio in zip(generated_recipe[0], generated_recipe[1]):
@@ -172,6 +188,7 @@ class Inference(CocktailEmbeddingMaker):
         #레시피의 맛 프로파일 생성
         recipe_taste = self.get_taste_info(recipe)
         return recipe_taste
+    
     def get_taste_info(self,cocktail_recipe):
         recipe_taste_weights = None
         for ingredient in cocktail_recipe.keys():
@@ -181,6 +198,7 @@ class Inference(CocktailEmbeddingMaker):
                 recipe_taste_weights = self.calculate_recipe_taste_weights(cocktail_recipe)
                 recipe_taste_weights.pop('ID')
             return recipe_taste_weights
+        
     def generate_recipe(self, seed_ingredient, user_preference, max_length=10):
         generated_recipe = [seed_ingredient]
         for _ in range(max_length - 1):
@@ -206,10 +224,14 @@ class Inference(CocktailEmbeddingMaker):
         target_abv = user_preference['ABV']
         quantities = self.adjust_ingredient_quantities(generated_recipe, target_abv)
         return generated_recipe, quantities
+    
+    
 class Eval(CocktailEmbeddingMaker):
-    def __init__(self,json_data, flavor_data,model, total_amount=200):
-        super().__init__(json_data, flavor_data, total_amount=200)
+    
+    def __init__(self,json_data, flavor_data,category_data,model, total_amount=200):
+        super().__init__(json_data, flavor_data,category_data, total_amount=200)
         self.model = model
+        
     def evaluate_model(self,model, test_user_list, num_recipes=100):
         self.model = model
         similarity_list= []
@@ -221,6 +243,7 @@ class Eval(CocktailEmbeddingMaker):
             # def generate_recipe(self, seed_ingredient, user_preference, max_length=10):
             seed_ingredient=random.choice(list(self.ingredient_ids.keys()))
             generated_recipes = self.generate_recipe(seed_ingredient,user)
+            print(generated_recipes)
             recipe_profile=self.get_taste_log(generated_recipes)
             recipe_profile_list.append(recipe_profile)
             s = self.evaluate_similarity(generated_recipes)
@@ -245,6 +268,8 @@ class Eval(CocktailEmbeddingMaker):
         }
         
         return evaluation_metrics,recipe_profile_list
+    
+    
     def evaluate_similarity(self, generated_recipe):
         
         
@@ -343,42 +368,82 @@ class Eval(CocktailEmbeddingMaker):
         #레시피의 맛 프로파일 생성
         recipe_taste = self.get_taste_info(recipe)
         return recipe_taste
+    def get_ingredient_category(self,ingredient_name):
+        ingredient_category = self.category_data[ingredient_name][0]
+        return ingredient_category
+    
+    def calculate_recipe_taste_score(self, recipe, quantities, user_preference):
+        recipe_taste_score = 0
+        for ingredient, quantity in zip(recipe, quantities):
+            ingredient_taste_score = self.get_ingredient_taste_score(ingredient, user_preference)
+            recipe_taste_score += ingredient_taste_score * quantity
+        
+        recipe_taste_score /= len(recipe)  # 재료 개수로 나누어 평균 점수 계산
+        return recipe_taste_score
+    
     def generate_recipe(self, seed_ingredient, user_preference, max_length=10):
+        #TODO : 가니시 고려해야함 
+        #TODO : 높은 도수의 음료는 한두가지로 제한해야함
         generated_recipe = [seed_ingredient]
         generated_quantities = []
-
-        for _ in range(max_length - 1):
+        high_abv_count = 0
+        max_high_abv = 2
+        total_prob = 0
+        max_prob_sum = 1.5
+        while total_prob < max_prob_sum:
             sequence = [self.ingredient_ids[self.normalize_string(ingredient)] for ingredient in generated_recipe]
             sequence = tf.keras.preprocessing.sequence.pad_sequences([sequence], maxlen=self.max_recipe_length)
 
             probabilities = self.model.predict(sequence)[0]
             probabilities[sequence[0]] = 0  # 중복 재료 제거
-
+            
             # 사용자 선호도를 반영하여 재료 선택 확률 조정
             for ingredient_id, prob in enumerate(probabilities):
                 ingredient_name = list(self.ingredient_ids.keys())[list(self.ingredient_ids.values()).index(ingredient_id)]
                 ingredient_taste_score = self.get_ingredient_taste_score(ingredient_name, user_preference)
                 ingredient_abv = self.get_ingredient_abv(ingredient_name)
                 abv_diff = abs(ingredient_abv - user_preference['ABV'])
+
                 abv_score = 1 / (1 + abv_diff)  # 도수 차이가 작을수록 높은 점수
+                # 재료의 카테고리를 고려하는 후처리
+                category = self.get_ingredient_category(ingredient_name)
+
+                if category in ['Alcohol']:
+                    if high_abv_count >= max_high_abv:
+                        probabilities[ingredient_id] *= 0.1  # 높은 도수 음료 제한
+                    else:
+                        high_abv_count += 1
+                elif category in ['Mixer'] and user_preference['ABV']==0:
+                    probabilities[ingredient_id] *= 1.5  # 무알콜 음료에는 Mixer 선호    
+                # elif category in ['Condiment']:
+                #     probabilities[ingredient_id] *= 10  # 과일이나 향신료, Mixer 선호
                 probabilities[ingredient_id] *= ingredient_taste_score * abv_score
 
-            next_ingredient_id = np.argmax(probabilities)
+            sum_prob = sum(probabilities)
+            normalized_prob = [prob / sum_prob for prob in probabilities]
+            next_ingredient_id = np.argmax(normalized_prob)
+
             next_ingredient = list(self.ingredient_ids.keys())[list(self.ingredient_ids.values()).index(next_ingredient_id)]
             generated_recipe.append(next_ingredient)
 
+            total_prob += normalized_prob[next_ingredient_id]
+            if len(generated_recipe)>=max_length:
+                break
         # 레시피 도수 계산 및 재료 양 조정
         target_abv = user_preference['ABV']
-        quantities = self.adjust_ingredient_quantities(generated_recipe, target_abv)
+        quantities = self.adjust_ingredient_quantities(generated_recipe, target_abv,user_preference)
         return generated_recipe, quantities
-    def adjust_ingredient_quantities(self, recipe, target_abv, max_iterations=100):
+        
+        #TODO : taste고려해야함 
+    def adjust_ingredient_quantities(self, recipe, target_abv, user_preference, max_iterations=100):
         quantities = [1] * len(recipe)  # 초기 재료 양 설정
         total_amount = len(recipe)
-
+        print(f"user_preference : {user_preference}")
         for _ in range(max_iterations):
             recipe_abv = self.calculate_recipe_abv(recipe, quantities)
+            recipe_taste_score = self.calculate_recipe_taste_score(recipe, quantities, user_preference)
 
-            if abs(recipe_abv - target_abv) < 0.5:  # 목표 도수와의 차이가 0.5 미만이면 종료
+            if abs(recipe_abv - target_abv) < 0.5 and recipe_taste_score >= 0.8:  # 목표 도수와의 차이가 0.5 미만이고 사용자 선호도 점수가 0.8 이상이면 종료
                 break
 
             # 도수 차이에 따라 재료 양 조정
@@ -397,6 +462,16 @@ class Eval(CocktailEmbeddingMaker):
                         quantities[i] += 0.1
                         total_amount += 0.1
 
+            # 사용자 선호도에 따라 재료 양 조정
+            for i, ingredient in enumerate(recipe):
+                ingredient_taste_score = self.get_ingredient_taste_score(ingredient, user_preference)
+                if ingredient_taste_score < 0.5:
+                    quantities[i] *= 0.9  # 선호도가 낮은 재료의 양을 감소
+                    total_amount -= quantities[i] * 0.1
+                elif ingredient_taste_score > 0.8:
+                    quantities[i] *= 1.1  # 선호도가 높은 재료의 양을 증가
+                    total_amount += quantities[i] * 0.1
+            # print(f"Recipe ABV: {recipe_abv}, Recipe Taste Score: {recipe_taste_score}")
         # 총량 대비 비율로 정규화
         quantities = [q / total_amount for q in quantities]
 
@@ -406,15 +481,33 @@ class Eval(CocktailEmbeddingMaker):
         return ingredient_info['ABV'] if ingredient_info else 0
 
     def get_ingredient_taste_score(self, ingredient_name, user_preference):
-        #ABV를 제외한 맛 특성 점수를 0~1사이로 정규화 함
         ingredient_info = next((item for item in self.flavor_data if item["name"] == ingredient_name), None)
 
         if ingredient_info:
-            taste_scores = {taste: ingredient_info[taste] / 100 for taste in user_preference if (taste != 'ABV' and taste != 'abv_min' and taste != 'abv_max' and taste !='user_id')}
-            abv_score = ingredient_info['ABV'] * user_preference['ABV']
-            taste_score = sum(taste_scores[taste] * user_preference[taste] for taste in taste_scores)
-            return taste_score * abv_score
+            # ABV 점수 계산
+            abv_diff = abs(ingredient_info['ABV'] - user_preference['ABV'])
+            #abv max값은 75.5
+            abv_score = 1 - (abv_diff / 75.5)  # 0~1 범위로 정규화
+
+            # 맛 점수 계산
+            taste_scores = []
+            for taste in user_preference:
+                if taste != 'ABV' and taste != 'abv_min' and taste != 'abv_max' and taste != 'user_id':
+                    ingredient_taste = ingredient_info[taste] / 100
+                    user_taste = user_preference[taste] / 100
+                    taste_score = 1 - abs(ingredient_taste - user_taste)  # 0~1 범위로 정규화
+                    taste_scores.append(taste_score)
+            
+            taste_score = sum(taste_scores) / len(taste_scores)  # 맛 점수들의 평균
+
+            # 가중 평균 계산
+            taste_weight = 0.7
+            abv_weight = 0.3
+            weighted_score = taste_weight * taste_score + abv_weight * abv_score
+
+            return weighted_score
         else:
-            return 1.0
+            print(f"there is no ingredient!:{ingredient_info}")
+            return 0.0  # 재료 정보가 없는 경우 0 반환
             
 
