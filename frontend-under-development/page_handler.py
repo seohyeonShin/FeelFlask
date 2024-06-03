@@ -635,31 +635,14 @@ def show_loading_page():
     else:
         st.write("Failed to get a cocktail recommendation. Please try again later.")
 
-        # Center the Restart button
-        st.markdown("<div style='text-align: center; margin-top: 20px;'>", unsafe_allow_html=True)
-        if st.button("Restart", key="restart"):
+    for i in range(3):
+      col1, col2, col3 = st.columns([3, 1, 3])
+      
+    col1, col2, col3 = st.columns([3, 1, 3])
+    with col2:
+        if st.button("Restart", key="restart", type='primary'):
             st.session_state.page = 0
             st.rerun()
-        st.markdown("</div>", unsafe_allow_html=True)
-
-        # CSS for button styling
-        st.markdown("""
-        <style>
-        .stButton button {
-            background-color: #ff4081; /* 핑크계열 빨강 */
-            color: white;
-            font-size: 20px;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: all 0.2s ease;
-        }
-        .stButton button:hover {
-            background-color: #e91e63;
-        }
-        </style>
-        """, unsafe_allow_html=True)
 
 
 

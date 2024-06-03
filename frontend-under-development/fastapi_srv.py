@@ -17,6 +17,9 @@ with open('./train_data.json', 'r') as f:
 
 with open('./flavor.json', 'r') as f:
     flavor_data = json.load(f)
+    
+with open('./category.json', 'r') as f:
+    category_data = json.load(f)
 
 
 class Features(BaseModel):
@@ -153,13 +156,13 @@ async def predict(features: Features):
                           'smoky' : features.smoky,
                           }
         seed_ingredient = features.seed
-        eval_obj = Eval(json_data, flavor_data, model)
+        total_amount = 200 #ml
+        eval_obj = Eval(json_data, flavor_data, category_data, model, total_amount)
 
         recipe_length = 5
         generated_recipes = eval_obj.generate_recipe(seed_ingredient, input_features, recipe_length)
         result_recipe = {}
 
-        total_amount = 200 #ml
 
         for recipe, ingredients in zip(generated_recipes[0], generated_recipes[1]):
             result_recipe[recipe]= ingredients * total_amount
