@@ -5,11 +5,12 @@ import streamlit as st
 import requests
 import random
 import time
-from streamlit_lottie import st_lottie
 from PIL import Image
 import base64
 from pathlib import Path
 import json
+from streamlit_lottie import st_lottie
+from streamlit_star_rating import st_star_rating
 
 
 def update_feature(feature_dic, select_feature, value_list):
@@ -730,7 +731,10 @@ def show_recommendation(prediction, cocktail_animations):
     # create feedback slider for 1-5 feedback rating input
     # 한번 submit하면 여러번 submit이 되도록 하면 안됩니다.
     if not st.session_state.is_submit:
-        st.session_state.feedback_ratings = st.slider('How do you like this recommendation?', 1, 5)
+        # using streamlit default slider
+        # st.session_state.feedback_ratings = st.slider('How do you like this recommendation?', 1, 5)
+        # using start rating component
+        st.session_state.feedback_ratings = st_star_rating("How do you like this recommendation?", maxValue=5, defaultValue=3, key="StarRating", dark_theme=True)
         if st.button("Submit Feedback"):
 
             with open('./feedback/feedback.json', 'r') as f:
