@@ -237,35 +237,35 @@ def handle_input_by_images(drinktype):
     col1, col2, col3, col4, col5  = st.columns([1, 1, 1, 1, 1])
     with col1:
         st.markdown(img_to_html(img_path_list[png_to_idx['lemon']]), unsafe_allow_html=True)
-        lemon = st.checkbox("lemon", key="lemon", help="add strong sour and bitter taste")
+        lemon = st.checkbox("lemon", key="lemon", help="add strong sour, bitter, fruity taste")
         if lemon:
             st.session_state.choice['lemon'] = 1
         else:
             st.session_state.choice['lemon'] = 0
 
         st.markdown(img_to_html(img_path_list[png_to_idx['bonfire']]), unsafe_allow_html=True)
-        bonfire = st.checkbox("bonfire", key="bonfire", help="add smoky taste")
+        bonfire = st.checkbox("bonfire", key="bonfire", help="add strong smoky taste")
         if bonfire:
             st.session_state.choice['bonfire'] = 1
         else:
             st.session_state.choice['bonfire'] = 0
 
         st.markdown(img_to_html(img_path_list[png_to_idx['chocolate']]), unsafe_allow_html=True)
-        chocolate = st.checkbox("chocolate", key="chocolate", help="add sweet taste")
+        chocolate = st.checkbox("chocolate", key="chocolate", help="add strong sweet taste")
         if chocolate:
             st.session_state.choice['chocolate'] = 1
         else:
             st.session_state.choice['chocolate'] = 0
 
         st.markdown(img_to_html(img_path_list[png_to_idx['mint']]), unsafe_allow_html=True)
-        mint = st.checkbox("mint", key="mint", help="add herbal taste")
+        mint = st.checkbox("mint", key="mint", help="add herbal and floral taste")
         if mint:
             st.session_state.choice['mint'] = 1
         else:
             st.session_state.choice['mint'] = 0
 
         st.markdown(img_to_html(img_path_list[png_to_idx['almond']]), unsafe_allow_html=True)
-        almond = st.checkbox("almond", key="almond", help="add nutty taste")
+        almond = st.checkbox("almond", key="almond", help="add strong nutty taste")
         if almond:
             st.session_state.choice['almond'] = 1
         else:
@@ -273,14 +273,14 @@ def handle_input_by_images(drinktype):
 
     with col2:
         st.markdown(img_to_html(img_path_list[png_to_idx['lime']]), unsafe_allow_html=True)
-        lime = st.checkbox("lime", key="lime", help="add strong sour and bitter taste")
+        lime = st.checkbox("lime", key="lime", help="add strong sour, bitter, fruity taste")
         if lime:
             st.session_state.choice['lime'] = 1
         else:
             st.session_state.choice['lime'] = 0
 
         st.markdown(img_to_html(img_path_list[png_to_idx['milk']]), unsafe_allow_html=True)
-        milk = st.checkbox("milk", key="milk", help="add creamy taste")
+        milk = st.checkbox("milk", key="milk", help="add umami, creamy taste")
         if milk:
             st.session_state.choice['milk'] = 1
         else:
@@ -308,35 +308,35 @@ def handle_input_by_images(drinktype):
             st.session_state.choice['lavender'] = 0
     with col3:
         st.markdown(img_to_html(img_path_list[png_to_idx['grapefruit']]), unsafe_allow_html=True)
-        grapefruit = st.checkbox("grapefruit", key="grapefruit", help="add strong sour and bitter taste")
+        grapefruit = st.checkbox("grapefruit", key="grapefruit", help="add strong sour, bitter, fruity taste")
         if grapefruit:
             st.session_state.choice['grapefruit'] = 1
         else:
             st.session_state.choice['grapefruit'] = 0
 
         st.markdown(img_to_html(img_path_list[png_to_idx['pepper']]), unsafe_allow_html=True)
-        pepper = st.checkbox("pepper", key="pepper", help="add spicy taste")
+        pepper = st.checkbox("pepper", key="pepper", help="add bitter, umami, spicy taste")
         if pepper:
             st.session_state.choice['pepper'] = 1
         else:
             st.session_state.choice['pepper'] = 0
 
         st.markdown(img_to_html(img_path_list[png_to_idx['basil']]), unsafe_allow_html=True)
-        basil = st.checkbox("basil", key="basil", help="add weak herbal taste")
+        basil = st.checkbox("basil", key="basil", help="add herbal and floral taste")
         if basil:
             st.session_state.choice['basil'] = 1
         else:
             st.session_state.choice['basil'] = 0
 
         st.markdown(img_to_html(img_path_list[png_to_idx['pistachio']]), unsafe_allow_html=True)
-        pistachio = st.checkbox("pistachio", key="pistachio", help="add nutty and smoky taste")
+        pistachio = st.checkbox("pistachio", key="pistachio", help="add umami and nutty taste")
         if pistachio:
             st.session_state.choice['pistachio'] = 1
         else:
             st.session_state.choice['pistachio'] = 0
 
         st.markdown(img_to_html(img_path_list[png_to_idx['cola']]), unsafe_allow_html=True)
-        cola = st.checkbox("coca-cola", key="coca-cola", help="add sweet and spicy taste")
+        cola = st.checkbox("coca-cola", key="coca-cola", help="add strong sweet and spicy taste")
         if cola:
             st.session_state.choice['cola'] = 1
         else:
@@ -350,21 +350,21 @@ def handle_input_by_images(drinktype):
             st.session_state.choice['honey'] = 0
 
         st.markdown(img_to_html(img_path_list[png_to_idx['ice_cream']]), unsafe_allow_html=True)
-        ice_cream = st.checkbox('ice cream', key='ice cream', help='add creamy and sweet taste')
+        ice_cream = st.checkbox('ice cream', key='ice cream', help='add strong creamy, sweet and little salty taste')
         if ice_cream:
             st.session_state.choice['ice_cream'] = 1
         else:
             st.session_state.choice['ice_cream'] = 0
 
         st.markdown(img_to_html(img_path_list[png_to_idx['salt']]), unsafe_allow_html=True)
-        salt = st.checkbox('salt', key='salt', help='add salty taste')
+        salt = st.checkbox('salt', key='salt', help='add strong salty taste')
         if salt:
             st.session_state.choice['salt'] = 1
         else:
             st.session_state.choice['salt'] = 0
 
         st.markdown(img_to_html(img_path_list[png_to_idx['champagne']]), unsafe_allow_html=True)
-        champagne = st.checkbox('champagne', key='champagne', help='add umami taste')
+        champagne = st.checkbox('champagne', key='champagne', help='add weak umami, floral taste')
         if champagne:
             st.session_state.choice['champagne'] = 1
         else:
@@ -378,7 +378,7 @@ def handle_input_by_images(drinktype):
             st.session_state.choice['candy'] = 0
 
         st.markdown(img_to_html(img_path_list[png_to_idx['pepper_hot']]), unsafe_allow_html=True)
-        hot_pepper = st.checkbox('hot pepper', key='hot pepper', help='add strong spicy taste')
+        hot_pepper = st.checkbox('hot pepper', key='hot pepper', help='add strong bitter, umami, spicy taste')
         if hot_pepper:
             st.session_state.choice['hot_pepper'] = 1
         else:
@@ -392,7 +392,7 @@ def handle_input_by_images(drinktype):
             st.session_state.choice['coffee_beans'] = 0
 
         st.markdown(img_to_html(img_path_list[png_to_idx['rose']]), unsafe_allow_html=True)
-        rose = st.checkbox('rose', key='rose', help='add floral taste')
+        rose = st.checkbox('rose', key='rose', help='add strong floral taste')
         if rose:
             st.session_state.choice['rose'] = 1
         else:
