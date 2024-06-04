@@ -65,7 +65,7 @@ async def filter(features: Features):
         for flavor in flavor_data:
             element = {}
             for feature, value in flavor.items():
-                if feature != "name":
+                if feature != "name" and feature != "ID":
                     element[feature] = value
             flavor_dic[flavor['name']] = element
 
@@ -89,18 +89,26 @@ async def filter(features: Features):
 
         sorted_values = []
         for item in user_profile.items():
+            # 알콜이 없는 음료를 요구한 경우에, ABV 정보는 제외하도록 합니다.
+            if (user_profile['ABV'] == 0 and item[0] == 'ABV'):
+                continue
             sorted_values.append(item)
 
         sorted_values = sorted(sorted_values, key=lambda x: x[1], reverse=True)
 
-        # 가장 특징적인 3개의 feature값을 가지는 feature들을 추출해 냅니다.
-        top_3_features = sorted_values[:3]
+        # 가장 특징적인 5개의 feature값을 가지는 feature들을 추출해 냅니다.
+        top_5_features = sorted_values[:5]
+
+        # 알콜이 포함되는 경우에는 ABV값도 score 계산에 포함시킵니다.
+        if user_profile['ABV'] != 0: # ABV가 0이 아닌 경우에는 ABV값도 포함합니다.
+            if ('ABV', user_profile['ABV']) not in top_5_features:
+                top_5_features.append(('ABV', user_profile['ABV']))
 
         # lower is better
         filter_score = {}
         for ing_name, feature_list in flavor_dic.items():
             filter_score[ing_name] = 0
-            for feature, value in top_3_features:
+            for feature, value in top_5_features:
                 filter_score[ing_name] += abs(feature_list[feature] - value)
 
         sorted_ingredient = []
@@ -109,7 +117,7 @@ async def filter(features: Features):
         sorted_ingredient = sorted(sorted_ingredient, key=lambda x: x[1])
         top_10_ingredient = []
 
-        # ABV가 0, 즉 알콜이 들어가지 않는 경우에는 재료에서 알콜이 포함되어 있는 재료를 
+        # ABV가 0, 즉 알콜이 들어가지 않는 경우에는 재료에서 알콜이 포함되어 있는 재료를
         # 선정해서는 안됩니다. 위에 top 3 feature에서 ABV값이 0이기 때문에 선택될 일이 없음으로
         # top 10 재료 선정에서만 주의하면 됩니다.
         if user_profile['ABV'] == 0:
@@ -118,12 +126,17 @@ async def filter(features: Features):
                 if flavor_dic[ing_name]['ABV'] == 0:
                     top_10_ingredient.append(ing_name)
                     count += 1
-                if count == 10: # 재료가 10번째가 되면 break합니다.
+                if count == 10: # 재료가 10개가 되면 break합니다.
                     break
         else:
-            # 전체 재료가 아닌 10개 까지의 재료를 추립니다.
-            for ing_name, score in sorted_ingredient[:10]:
-                top_10_ingredient.append(ing_name)
+            # 알콜올이 사용되는 경우 알콜이 포함되는 재료 (음료)만을 추천에 사용하도록 합니다.
+            count = 0
+            for ing_name, score in sorted_ingredient:
+                if flavor_dic[ing_name]['ABV'] > 0:
+                    top_10_ingredient.append(ing_name)
+                    count += 1
+                if count == 10:
+                    break
 
         top_10_flavor = {}
         for ing_name in top_10_ingredient:

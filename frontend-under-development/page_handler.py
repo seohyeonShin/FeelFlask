@@ -167,7 +167,7 @@ def handle_drink_type_page():
       col1, col2, col3 = st.columns([3, 1, 3])
     
     with col2:
-        if st.button("Restart", key="restart", type='primary'):
+        if st.button("Restart", key="restart"):
             initialize_state()
             st.rerun()
 
@@ -538,7 +538,7 @@ def handle_input_seed_ingredient(loading_animations):
       col1, col2, col3 = st.columns([3, 1, 3])
 
     with col2:
-        if st.button("Restart", key="restart", type='primary'):
+        if st.button("Restart", key="restart"):
             initialize_state()
             st.rerun()
 
