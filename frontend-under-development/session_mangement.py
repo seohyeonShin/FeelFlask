@@ -23,12 +23,9 @@ def initialize_session_state():
     # image path를 저장하는 변수. img_to_idx와 같이 사용하면 인덱스에 맞게 경로에 접근할 수 있음
     if 'img_path_list' not in st.session_state:
         st.session_state.img_path_list = None
-    # 동일 질문 카테고리 내에서 가능한 선택지를 저장하는 변수
+    # 선택된 특성을 저장하는 변수
     if 'choice' not in st.session_state:
-        st.session_state.choice = None
-    # 한 페이지에서 2개 이상의 주제에 대한 선택지가 등장할 때, 두 번째 선택지를 저장하는 변수
-    if 'choice2' not in st.session_state:
-        st.session_state.choice2 = None
+        st.session_state.choice = {}
     # loading animation을 미리 loading page 전 페이지에 선택하고 사용하기 위한 변수
     if 'loading_animation' not in st.session_state:
         st.session_state.loading_animation = None

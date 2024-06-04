@@ -9,7 +9,6 @@ from typing import List, Dict
 
 app = FastAPI()
 
-# Load your trained LSTM model
 model = tf.keras.models.load_model('testmodel.h5')
 
 with open('./train_data.json', 'r') as f:
