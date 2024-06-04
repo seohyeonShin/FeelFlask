@@ -1,6 +1,7 @@
 
 import numpy as np
 import tensorflow as tf
+import random
 import json
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense, Embedding
@@ -19,7 +20,7 @@ class RecipeGenerationModel:
         self.evaluation_metrics=None
         self.sweep_id = None
         self.wandb = wandb_Flag
-        
+        self.aug = True
         self.total_amount = 200
         self.Eval = eval_obj
         self.attributes = ['ABV', 'boozy', 'sweet', 'sour', 'bitter', 'umami', 'salty', 'astringent', 'Perceived_temperature', 'spicy', 'herbal', 'floral', 'fruity', 'nutty', 'creamy', 'smoky']
@@ -28,7 +29,7 @@ class RecipeGenerationModel:
     def save_best_model(self, performance, abv_match, taste_match, threshold_performance, threshold_abv_match, threshold_taste_match,run_id):
 
         if performance >= threshold_performance and abv_match >= threshold_abv_match and taste_match >= threshold_taste_match:
-            self.model.model.save(f'best_model_{run_id}.h5')
+            self.model.save(f'best_model_{run_id}.h5')
             print("Best model saved.")
         else:
             print("Model does not meet the threshold criteria.")
@@ -51,11 +52,26 @@ class RecipeGenerationModel:
         
         model.compile(loss='categorical_crossentropy', optimizer=optimizer,metrics=['accuracy'])
         return model
-
+    def augment_recipes(self,recipes, augmentation_factor=2):
+        augmented_recipes = []
+        
+        for recipe in recipes:
+            # 원본 레시피 추가
+            augmented_recipes.append(recipe)
+            
+            # 증강 데이터 생성
+            for _ in range(augmentation_factor):
+                shuffled_recipe = list(recipe)
+                random.shuffle(shuffled_recipe)
+                augmented_recipes.append(shuffled_recipe)
+        
+        return augmented_recipes
+    
     def train(self, recipes,test_user_list,perEpoch= True, epochs=50, batch_size=32,learning_rate=0.001):
         ingredient_sequences = []
         next_ingredients = []
-
+        if self.aug:
+            recipes = self.augment_recipes(recipes)
         for recipe in recipes:
             sequence = [self.ingredient_ids[self.cocktail_embedding_maker.normalize_string(ingredient)] for ingredient in recipe]
             for i in range(1, len(sequence)):
@@ -67,7 +83,7 @@ class RecipeGenerationModel:
         evaluation_interval = 5
         if self.wandb:
             # wandb 초기화
-            wandb.init(project='cocktail_recipe_generation_v2')
+            wandb.init(project='cocktail_recipe_generation_v3_random_seed')
             epochs = wandb.config.get('epochs', 50)
             batch_size = wandb.config.get('batch_size', 32)
             learning_rate = wandb.config.get('lr', 0.001)
@@ -160,4 +176,4 @@ if __name__ == '__main__':
 
     # 모델 학습
     loss, accuracy, performance = recipe_generation_model.train(train_recipes,test_user_list)
-    recipe_generation_model.model.save(f'testmodel_2024_0603.h5')
+    # recipe_generation_model.model.save(f'testmodel_2024_0603.h5')
