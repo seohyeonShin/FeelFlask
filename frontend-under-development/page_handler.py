@@ -132,7 +132,7 @@ def handle_drink_type_page():
     st.markdown(
         """
         <div style="text-align: center;">
-            <h1>Choose Your Drink Type</h1>
+            <h1>Choose Your Drink Type (1/3)</h1>
             <h2></h2>
         </div>
         """, 
@@ -180,7 +180,7 @@ def handle_input_by_images(drinktype):
     st.markdown(
         """
         <div style="text-align: center;">
-            <h1>Explore your taste!</h1>
+            <h1>Explore your taste! (2/3)</h1>
             <h2></h2>
         </div>
         """,
@@ -476,7 +476,7 @@ def handle_input_seed_ingredient(loading_animations):
     st.markdown(
         """
         <div style="text-align: center;">
-            <h1>Input seed ingredient!</h1>
+            <h1>Input seed ingredient! (3/3)</h1>
             <h2></h2>
         </div>
         """,
