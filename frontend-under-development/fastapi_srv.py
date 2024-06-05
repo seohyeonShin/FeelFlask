@@ -17,6 +17,9 @@ with open('./train_data.json', 'r') as f:
 with open('./flavor.json', 'r') as f:
     flavor_data = json.load(f)
     
+with open('./ingredients_description.json', 'r') as f:
+    ingredients_description = json.load(f)
+
 with open('./category.json', 'r') as f:
     category_data = json.load(f)
 
@@ -47,6 +50,7 @@ class Recipe(BaseModel):
 class FilteredIngredients(BaseModel):
     ingredients: List[str]
     flavor: Dict[str, Dict[str, float]]
+    description: Dict[str, Dict[str, str]]
 
 
 # 사용자의 profile을 입력으로, 가장 값이 높은 feature 3개를 뽑습니다.
@@ -62,6 +66,13 @@ async def filter(features: Features):
                 if feature != "name" and feature != "ID":
                     element[feature] = value
             flavor_dic[flavor['name']] = element
+
+        # 각 ingredient name과 ingredient의 카테고리 정보가 맵핑되도록 합니다.
+        description_dic = {}
+        for ingredient in ingredients_description:
+            element = {"description": ingredient['description']}
+            description_dic[ingredient['name'].lower()] = element
+
 
         user_profile = {'ABV': features.ABV,
                           'sweet' : features.sweet,
@@ -134,15 +145,21 @@ async def filter(features: Features):
                     break
 
         top_10_flavor = {}
+        top_10_description = {}
         for ing_name in top_10_ingredient:
             top_10_flavor[ing_name] = {}
+            top_10_description[ing_name] = {}
             for feature, value in flavor_dic[ing_name].items():
                 # 몇몇 재료는 'ID' feature가 들어가 있습니다. flavor정보에 오류가 있어 보입니다.
                 if feature != "ID":
                     top_10_flavor[ing_name][feature] = value
 
+            for feature, value in description_dic[ing_name].items():
+                top_10_description[ing_name][feature] = value
+                
         return {"ingredients" : top_10_ingredient,
-                "flavor" : top_10_flavor}
+                "flavor" : top_10_flavor,
+                "description" : top_10_description}
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

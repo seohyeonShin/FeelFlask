@@ -724,7 +724,7 @@ def handle_input_seed_ingredient(loading_animations):
                     if st.button(
                         ingredient,
                         key=f"ingredient_button_{i + j}",
-                        help=f"Select {ingredient} as your seed ingredient",
+                        help=f"{seed_ingredient_list['description'][ingredient]['description']}",  # 재료에 대한 설명
                         use_container_width=True
                     ):
                         st.session_state.selected_ingredient = ingredient
@@ -858,8 +858,8 @@ def show_recommendation(prediction, cocktail_animations):
         col1, col2 = st.columns(2)
 
         with col1:
-            cocktail_animation = random.choice(cocktail_animations)
-            st_lottie(cocktail_animation, height=animation_height, key="cocktail_animation")
+            cocktail_animations = random.choice(cocktail_animations)
+            st_lottie(cocktail_animations, height=animation_height, key="cocktail_animation")
             # # Display image
             # st.image(cocktail['image_path'], width=300)
 
