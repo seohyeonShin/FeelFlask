@@ -48,12 +48,6 @@ class FilteredIngredients(BaseModel):
     ingredients: List[str]
     flavor: Dict[str, Dict[str, float]]
 
-class Ratings(BaseModel):
-    rates: int
-
-@app.post('/db')
-async def db(rates: Ratings):
-    pass
 
 # 사용자의 profile을 입력으로, 가장 값이 높은 feature 3개를 뽑습니다.
 # 해당 feature들과 가장 유사한 값을 가지는 ingredient를 여러개 뽑아 list로 반환합니다.
@@ -123,16 +117,17 @@ async def filter(features: Features):
         if user_profile['ABV'] == 0:
             count = 0
             for ing_name, score in sorted_ingredient:
-                if flavor_dic[ing_name]['ABV'] == 0:
+                # Mixer 카테고리에 속하고, ABV가 0인 경우에 추가합니다.
+                if flavor_dic[ing_name]['ABV'] == 0 and ('Mixer' in category_data[ing_name]):
                     top_10_ingredient.append(ing_name)
                     count += 1
                 if count == 10: # 재료가 10개가 되면 break합니다.
                     break
         else:
-            # 알콜올이 사용되는 경우 알콜이 포함되는 재료 (음료)만을 추천에 사용하도록 합니다.
+            # ABV값이 0 이상이고, Alcohol 카테고리에 속하는 재료를 선정합니다.
             count = 0
             for ing_name, score in sorted_ingredient:
-                if flavor_dic[ing_name]['ABV'] > 0:
+                if flavor_dic[ing_name]['ABV'] > 0 and ('Alcohol' in category_data[ing_name]):
                     top_10_ingredient.append(ing_name)
                     count += 1
                 if count == 10:

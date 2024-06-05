@@ -119,21 +119,22 @@ async def filter(features: Features):
         top_10_ingredient = []
 
         # ABV가 0, 즉 알콜이 들어가지 않는 경우에는 재료에서 알콜이 포함되어 있는 재료를
-        # 선정해서는 안됩니다. 위에 top 3 feature에서 ABV값이 0이기 때문에 선택될 일이 없음으로
+        # 선정해서는 안됩니다. 위에 top 5 feature에서 ABV값이 0이기 때문에 선택될 일이 없음으로
         # top 10 재료 선정에서만 주의하면 됩니다.
         if user_profile['ABV'] == 0:
             count = 0
             for ing_name, score in sorted_ingredient:
-                if flavor_dic[ing_name]['ABV'] == 0:
+                # Mixer 카테고리에 속하고, ABV가 0인 경우에 추가합니다.
+                if (flavor_dic[ing_name]['ABV'] == 0) and ('Mixer' in category_data[ing_name]):
                     top_10_ingredient.append(ing_name)
                     count += 1
                 if count == 10: # 재료가 10개가 되면 break 합니다.
                     break
         else:
-            # 알콜올이 사용되는 경우 알콜이 포함되는 재료 (음료)만을 추천에 사용하도록 합니다.
+            # ABV값이 0 이상이고, Alcohol 카테고리에 속하는 재료를 선정합니다.
             count = 0
             for ing_name, score in sorted_ingredient:
-                if flavor_dic[ing_name]['ABV'] >= 0:
+                if (flavor_dic[ing_name]['ABV'] >= 0) and ('Alcohol' in category_data[ing_name]):
                     top_10_ingredient.append(ing_name)
                     count += 1
                 if count == 10: # 재료가 10개가 되면 break 합니다.
