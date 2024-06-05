@@ -23,18 +23,12 @@ if st.session_state.page == 0:
 elif st.session_state.page == 1:
     handle_drink_type_page()
 elif st.session_state.page == 2:
-    handle_input_by_images_1(st.session_state.drink_type)
+    handle_input_by_images(st.session_state.drink_type)
 elif st.session_state.page == 3:
-    handle_input_by_images_2()
-elif st.session_state.page == 4:
-    handle_input_by_images_3()
-elif st.session_state.page == 5:
-    handle_input_by_images_4()
-elif st.session_state.page == 6:
     handle_input_seed_ingredient(loading_animations)
-elif st.session_state.page == 7:
+elif st.session_state.page == 4:
     show_loading_page()
-elif st.session_state.page == 8:
+elif st.session_state.page == 5:
     if 'prediction_result' in st.session_state:
         show_recommendation(st.session_state.prediction_result,
                             cocktail_animations)
