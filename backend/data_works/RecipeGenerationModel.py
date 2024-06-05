@@ -95,13 +95,15 @@ class RecipeGenerationModel:
                 history = self.model.fit(ingredient_sequences, next_ingredients, epochs=1, batch_size=batch_size, verbose=0)
                 loss = history.history['loss'][0]
                 accuracy = history.history['accuracy'][0]
+
                 if self.wandb:
                     # wandb 로깅
-                    wandb.log({
-                        'epoch': epochs,
-                        'loss': loss,
-                        'accuracy': accuracy,
-                    })
+                    if epoch%10==0:
+                        wandb.log({
+                            'epoch': epochs,
+                            'loss': loss,
+                            'accuracy': accuracy,
+                        })
         else:
             history = self.model.fit(ingredient_sequences, next_ingredients, epochs=epochs, batch_size=batch_size, verbose=0)
             loss = history.history['loss'][0]
