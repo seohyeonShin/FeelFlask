@@ -70,7 +70,16 @@ class RecipeGenerationModel:
     def train(self, recipes,test_user_list,perEpoch= True, epochs=50, batch_size=32,learning_rate=0.001):
         ingredient_sequences = []
         next_ingredients = []
-        if self.aug:
+        if self.wandb:
+            # wandb 초기화
+            wandb.init(project='cocktail_recipe_generation_v3_random_seed')
+            epochs = wandb.config.get('epochs', 50)
+            batch_size = wandb.config.get('batch_size', 32)
+            learning_rate = wandb.config.get('lr', 0.001)
+            optimizer = wandb.config.get('optimizer', 'adam')
+            self.augmentation = wandb.config.get('augmentation', True)
+
+        if self.augmentation:
             recipes = self.augment_recipes(recipes)
         for recipe in recipes:
             sequence = [self.ingredient_ids[self.cocktail_embedding_maker.normalize_string(ingredient)] for ingredient in recipe]
@@ -80,14 +89,8 @@ class RecipeGenerationModel:
 
         ingredient_sequences = tf.keras.preprocessing.sequence.pad_sequences(ingredient_sequences, maxlen=self.max_recipe_length)
         next_ingredients = tf.keras.utils.to_categorical(next_ingredients, num_classes=self.num_ingredients)
-        evaluation_interval = 5
-        if self.wandb:
-            # wandb 초기화
-            wandb.init(project='cocktail_recipe_generation_v3_random_seed')
-            epochs = wandb.config.get('epochs', 50)
-            batch_size = wandb.config.get('batch_size', 32)
-            learning_rate = wandb.config.get('lr', 0.001)
-            optimizer = wandb.config.get('optimizer', 'adam')
+        
+
             
         self.model = self.build_model()
         if perEpoch:
@@ -121,7 +124,7 @@ class RecipeGenerationModel:
             # 모델 평가
         # print("evaluating model")
 
-        evaluation_results,recipe_profile_list = self.Eval.evaluate_model(self.model, test_user_list)
+        evaluation_results,recipe_profile_list = self.Eval.evaluate_model(self.model, test_user_list,self.wandb)
         if self.wandb:
             for recipe_profile in recipe_profile_list:
                 for key in self.attributes:
