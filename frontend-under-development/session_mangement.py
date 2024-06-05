@@ -1,5 +1,6 @@
 import streamlit as st
 import json
+import numpy as np
 
 def initialize_session_state():
     # 페이지 업데이트 구분용
@@ -26,6 +27,12 @@ def initialize_session_state():
     # 선택된 특성을 저장하는 변수
     if 'choice' not in st.session_state:
         st.session_state.choice = {}
+        ingredient_list = ['lemon', 'bonfire', 'chocolate', 'mint', 'almond', 'lime', 'milk', 'pretzel',
+                           'dark_chocolate', 'lavender', 'grapefruit', 'pepper', 'basil', 'pistachio', 'cola', 
+                           'honey', 'ice_cream', 'salt', 'champagne', 'candy', 'hot_pepper', 'coffee_beans',
+                           'rose']
+        for ingredient in ingredient_list:
+            st.session_state.choice[ingredient] = 0 # must be intialized as 0
     # loading animation을 미리 loading page 전 페이지에 선택하고 사용하기 위한 변수
     if 'loading_animation' not in st.session_state:
         st.session_state.loading_animation = None
@@ -34,6 +41,11 @@ def initialize_session_state():
         st.session_state.feedback_ratings = 0
     if 'is_submit' not in st.session_state:
         st.session_state.is_submit = False
+    # 선택된 재료에 대한 특성을 저장하는데 사용하는 변수입니다. 특성은 'sweet', 'sour', 'bitter', 'fruity', 'umami',
+    # 'smoky', 'herbal', 'floral', 'nutty', 'creamy', 'spicy', 'salty' 입니다.
+    if 'choice_state' not in st.session_state:
+        st.session_state.choice_state = np.array([50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50])
+
 
 def load_lottie_files(pattern, start, end):
     files = []
