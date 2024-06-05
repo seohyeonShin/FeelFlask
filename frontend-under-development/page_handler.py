@@ -12,6 +12,12 @@ import json
 from streamlit_lottie import st_lottie
 from streamlit_star_rating import st_star_rating
 
+def restart_btn():
+    col1, col2, col3 = st.columns([3, 1, 3])
+    with col2:
+        if st.button("Restart", key="restart", type='primary'):
+            initialize_state()
+            st.rerun()
 
 def update_feature(feature_dic, select_feature, value_list):
     for i, feature in enumerate(select_feature):
@@ -53,6 +59,7 @@ def initialize_state():
     st.session_state.loading_animation = None
     st.session_state.feedback_ratings = 0
     st.session_state.is_submit = False
+    st.session_state.selected_ingredient = None
 
 # 다음 페이지로 넘어가는 함수
 # st.session_state.page 값을 1 증가시키고, st.rerun()을 통해 다음 페이지로 넘어갑니다. (순서는 app.py 참고)
@@ -472,6 +479,53 @@ def handle_input_by_images(drinktype):
 
 
 def handle_input_seed_ingredient(loading_animations):
+    st.markdown(
+        """
+        <style>
+        .element-container:has(#select_button_span) + div button {
+            background-color: #d3d3d3; /* 그레이 */
+            color: black;
+            font-size: 24px;
+            border: none;
+            border-radius: 50px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+            width: 200px;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            word-break: keep-all; 
+            white-space: pre;
+        }
+        .element-container:has(#select_button_span) + div button:hover {
+            background-color: #c0c0c0;
+        }
+        .element-container:has(#selected_button_span) + div button {
+            background-color: #ffe4b5; /* 노란색 */
+            color: black;
+            font-size: 24px;
+            border: none;
+            border-radius: 10px;W
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+            width: 200px;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            word-break: break-word;
+            white-space: pre;
+        }
+        .element-container:has(#selected_button_span) + div button:hover {
+            background-color: #ffd700;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
 
     st.markdown(
         """
@@ -500,26 +554,73 @@ def handle_input_seed_ingredient(loading_animations):
 
     if response.status_code == 200:
         seed_ingredient_list = response.json()
+        if "selected_ingredient" not in st.session_state:
+            st.session_state.selected_ingredient = seed_ingredient_list['ingredients'][9]   # Top 10중에 10번째 재료로 초기화
+        elif st.session_state.selected_ingredient is None:
+            st.session_state.selected_ingredient = seed_ingredient_list['ingredients'][9]
     else:
         st.write("Failed to get a filtered ingredient list. Please try again later.")
+        
 
-    seed_ingredient = st.selectbox("Choose your seed ingredients", seed_ingredient_list['ingredients'], key="select_seed_ingredient_from_list")
+    # Button 형태로 변환 3x3
+    st.markdown("Choose your seed ingredients:")
+    for i in range(0, len(seed_ingredient_list['ingredients'])//3 * 3, 3):
+        cols = st.columns(3)
+        for j in range(3):
+            if i + j < len(seed_ingredient_list['ingredients']):
+                ingredient = seed_ingredient_list['ingredients'][i + j]
+                if st.session_state.selected_ingredient == ingredient:
+                    button_style = "selected_button_span"
+                else:
+                    button_style = "select_button_span"
+                with cols[j]:
+                    st.markdown(f'<span id={button_style}></span>', unsafe_allow_html=True)
+                    if st.button(
+                        ingredient,
+                        key=f"ingredient_button_{i + j}",
+                        help=f"Select {ingredient} as your seed ingredient",
+                        use_container_width=True
+                    ):
+                        st.session_state.selected_ingredient = ingredient
+                        st.rerun()
+
+    seed_ingredient = st.session_state.selected_ingredient
     selected_flavor = seed_ingredient_list['flavor'][seed_ingredient]
 
     # 맛 그래프 표시
-    st.markdown("### Flavor Profile")
-    fig1, ax1 = plt.subplots(subplot_kw={'projection': 'polar'})
+    if selected_flavor:
+        col1, col2, col3 = st.columns([1, 30, 1])
+        # 맛 그래프 표시
+        with col2:
+            st.markdown("### Flavor Profile")
+            labels = list(selected_flavor.keys())
+            labels = labels[-4:] + labels[:-4]
+            values = list(selected_flavor.values())
+            values = values[-4:] + values[:-4]
+            values += values[:1]  # close the circle
+            theta = np.linspace(0.0, 2 * np.pi, len(labels), endpoint=False)
+            theta = np.append(theta, theta[0])
 
-    labels = list(selected_flavor.keys())
-    values = list(selected_flavor.values())
-    values += values[:1]
-    theta = np.linspace(0.0, 2 * np.pi, len(labels), endpoint=False)
-    theta = np.append(theta, theta[0])
-    ax1.fill(theta, values, 'b', alpha=0.1)
-    ax1.plot(theta, values, 'b', marker='o')
-    ax1.set_xticks(theta[:-1])
-    ax1.set_xticklabels(labels)
-    st.pyplot(fig1)
+            fig, ax = plt.subplots(figsize=(5, 5), subplot_kw=dict(polar=True))
+
+            # Draw the polygon representing the data
+            ax.fill(theta, values, color='b', alpha=0.1)
+            ax.plot(theta, values, color='b', marker='o', linestyle='-', linewidth=2, alpha=0.3)
+
+            # Add labels to each axis
+            ax.set_xticks(theta[:-1])
+            ax.set_xticklabels(labels, fontsize=7, fontweight='bold')
+
+            # Add grid lines
+            ax.yaxis.grid(True, color='gray', linestyle='--', linewidth=0.5)
+            ax.xaxis.grid(True, color='gray', linestyle='--', linewidth=0.5)
+
+            # Set the range for the radial axes # REMOVE
+            ax.set_ylim(0, 100)
+            ax.set_yticklabels([])
+
+            # Add a title
+            st.pyplot(fig)
 
     if st.button(
         "Determine",
@@ -583,14 +684,7 @@ def show_loading_page():
     else:
         st.write("Failed to get a cocktail recommendation. Please try again later.")
 
-    for i in range(3):
-      col1, col2, col3 = st.columns([3, 1, 3])
-      
-    col1, col2, col3 = st.columns([3, 1, 3])
-    with col2:
-        if st.button("Restart", key="restart", type='primary'):
-            initialize_state()
-            st.rerun()
+    restart_btn()
 
 
 
@@ -685,12 +779,7 @@ def show_recommendation(prediction, cocktail_animations):
             st.write("Thanks!")
             st.session_state.is_submit = True
 
-
-    col1, col2, col3 = st.columns([3, 1, 3])
-    with col2:
-        if st.button("Restart", key="restart", type='primary'):
-            initialize_state()
-            st.rerun()
+    restart_btn()
 
 
 # def handle_feedback_page():
@@ -698,8 +787,4 @@ def show_recommendation(prediction, cocktail_animations):
 
 #     feedback = st.slider('How do you like this recommendation?', 0, 5)
 
-#     col1, col2, col3 = st.columns([3, 1, 3])
-#     with col2:
-#         if st.button("Restart", key="restart", type='primary'):
-#             st.session_state.page = 0
-#             st.rerun()
+#     restart_btn()
