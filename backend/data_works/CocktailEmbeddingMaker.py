@@ -157,6 +157,45 @@ class CocktailEmbeddingMaker:
 class Eval(CocktailEmbeddingMaker):
     def __init__(self,json_data, flavor_data,category_data, total_amount=200):
         super().__init__(json_data, flavor_data,category_data, total_amount=200)
+        self.user_seed = None
+        self.user_seed_len = 0
+    def set_user_seed(self,user_seed_ingredient):
+        self.user_seed = user_seed_ingredient
+        self.user_seed_len = len(user_seed_ingredient)
+
+    def select_user_seed(self, user_preference, max_base_spirits=2, max_mixers=2, max_condiments=1):
+        def select_ingredients(category, count, sort_key=None):
+            if self.user_seed is None:
+                ingredients = []
+            else:
+                ingredients = [ingredient for ingredient in self.user_seed if self.get_ingredient_category(ingredient) == category]
+            if len(ingredients) < count:
+                all_ingredients = [ingredient for ingredient in self.ingredient_ids.keys() if self.get_ingredient_category(ingredient) == category]
+                if sort_key:
+                    all_ingredients.sort(key=sort_key, reverse=True)
+                ingredients.extend(all_ingredients[:count - len(ingredients)])
+            else:
+                ingredients = ingredients[:count]
+            return ingredients
+
+        if self.user_seed is None:
+            self.user_seed = []
+
+        if user_preference['ABV'] > 0:
+            base_spirits = select_ingredients('Alcohol', max_base_spirits, lambda x: abs(self.get_ingredient_abv(x) - user_preference['ABV']))
+            self.user_seed = [spirit for spirit in self.user_seed if spirit in base_spirits]
+        else:
+            self.user_seed = [ingredient for ingredient in self.user_seed if self.get_ingredient_category(ingredient) != 'Alcohol']
+
+        mixers = select_ingredients('Mixer', max_mixers, lambda x: self.get_ingredient_taste_score(x, user_preference))
+        condiments = select_ingredients('Condiment', max_condiments, lambda x: self.get_ingredient_taste_score(x, user_preference))
+
+        self.user_seed.extend(mixers)
+        self.user_seed.extend(condiments)
+        self.user_seed = list(set(self.user_seed))  # 중복 제거
+        self.user_seed_len = len(self.user_seed)
+
+
     def evaluate_model(self,model, test_user_list, num_recipes=100):
         self.model = model
         similarity_list= []
@@ -166,7 +205,8 @@ class Eval(CocktailEmbeddingMaker):
         recipe_profile_list=[]
         for user in test_user_list:
             # def generate_recipe(self, seed_ingredient, user_preference, max_length=10):
-            seed_ingredient=random.choice(list(self.ingredient_ids.keys()))
+            # seed_ingredient=random.choice(list(self.ingredient_ids.keys()))
+            seed_ingredient = self.select_user_seed(user)
             # seed_ingredient = "vodka"#"lemon juice"
             generated_recipes = self.generate_recipe(model,seed_ingredient,user)
             print(generated_recipes)
@@ -315,7 +355,7 @@ class Eval(CocktailEmbeddingMaker):
         high_abv_count = 0
         max_high_abv = 2
         total_prob = 0
-        max_prob_sum = 1.5
+        max_prob_sum = 1.0
         while total_prob < max_prob_sum:
             sequence = [self.ingredient_ids[self.normalize_string(ingredient)] for ingredient in generated_recipe]
             sequence = tf.keras.preprocessing.sequence.pad_sequences([sequence], maxlen=self.max_recipe_length)
@@ -366,7 +406,7 @@ class Eval(CocktailEmbeddingMaker):
 
             next_ingredient = list(self.ingredient_ids.keys())[list(self.ingredient_ids.values()).index(next_ingredient_id)]
             generated_recipe.append(next_ingredient)
-
+            print(f"next_ingredient : {next_ingredient}, total_prob : {total_prob} , normalized_prob[next_ingredient_id] : {normalized_prob[next_ingredient_id]}")
             total_prob += normalized_prob[next_ingredient_id]
             if len(generated_recipe)>=max_length:
                 break
