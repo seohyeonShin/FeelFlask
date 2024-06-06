@@ -12,7 +12,13 @@ class CocktailEmbeddingMaker:
         self.max_recipe_length=10
         self.category_data = category_data
         self.init()
-
+        self.ingredient_mapping=None
+        
+    def set_ingredient_mapping(self):
+        with open('limited_item_dict.json', 'r') as f:
+            ingredient_mapping = json.load(f)
+        self.ingredient_mapping = ingredient_mapping
+    
     def normalize_string(self, name):
         # return name.replace('\\"', '"').replace("\\'", "'")
         # print(name)
@@ -183,6 +189,9 @@ class Eval(CocktailEmbeddingMaker):
         super().__init__(json_data, flavor_data,category_data, total_amount=200)
         self.user_seed = None
         self.user_seed_len = 0
+        self.limited_ingredient_list=[]
+        self.limited_mode = False
+
     def set_user_seed(self,user_seed_ingredient):
         self.user_seed = user_seed_ingredient
         self.user_seed_len = len(user_seed_ingredient)
@@ -374,6 +383,101 @@ class Eval(CocktailEmbeddingMaker):
         recipe_taste_score /= len(recipe)  # 재료 개수로 나누어 평균 점수 계산
         return recipe_taste_score
     
+    def set_limited_ingredient(self, ingredient_list):
+        '''
+        소지 재료 입력
+        '''
+        self.limited_ingredient_list = ingredient_list
+        self.limited_mode = True
+        print(f"limited_ingredient_list : {self.limited_ingredient_list}")
+        self.set_ingredient_mapping()
+
+    def map_ingredient(self,ingredient):
+        return self.ingredient_mapping.get(ingredient.lower(), ingredient)
+    def generate_recipe_limited(self, model, seed_ingredient, user_preference, max_length=6):
+        self.model = model
+        generated_recipe = [seed_ingredient]
+        print(f"seed_ingredient : {seed_ingredient}")
+        high_abv_count = 0
+        base_ingredient_count = 0
+        max_high_abv = 2
+        max_base_ingredients = 2
+        total_prob = 0
+        max_prob_sum = 1.0
+        used_ingredients = set()
+        ingredient_list = self.limited_ingredient_list
+        while total_prob < max_prob_sum and len(generated_recipe) < max_length:
+            try:
+                sequence = [self.ingredient_ids[self.normalize_string(ingredient)] for ingredient in generated_recipe]
+                sequence = tf.keras.preprocessing.sequence.pad_sequences([sequence], maxlen=self.max_recipe_length)
+            except Exception as e:
+                print(f"generated_recipe : {generated_recipe}")
+            probabilities = self.model.predict(sequence)[0]
+            probabilities[sequence[0]] = 0  # 중복 재료 제거
+            
+            # 사용자가 보유한 재료로 제한 및 대체 매핑 적용
+            for i, prob in enumerate(probabilities):
+                ingredient_name = list(self.ingredient_ids.keys())[list(self.ingredient_ids.values()).index(i)]
+                if ingredient_name in used_ingredients:
+                    probabilities[i] = 0  # 이미 사용된 재료 제외
+                elif ingredient_name not in ingredient_list:
+                    category = self.get_ingredient_category(ingredient_name)
+                    if category in ['Alcohol', 'Mixer']:
+                        mapped_ingredient = self.map_ingredient(ingredient_name)
+                        if mapped_ingredient in ingredient_list:
+                            probabilities[i] = probabilities[self.ingredient_ids[mapped_ingredient]]
+                        else:
+                            probabilities[i] = 0
+                    else:
+                        probabilities[i] = 0
+            
+            # 사용자 선호도를 반영하여 재료 선택 확률 조정
+            for ingredient_id, prob in enumerate(probabilities):
+                ingredient_name = list(self.ingredient_ids.keys())[list(self.ingredient_ids.values()).index(ingredient_id)]
+                ingredient_taste_score = self.get_ingredient_taste_score(ingredient_name, user_preference)
+                ingredient_abv = self.get_ingredient_abv(ingredient_name)
+                if user_preference['ABV'] == 0 and ingredient_abv > 0:
+                    abv_score = 0
+                else:
+                    abv_diff = abs(ingredient_abv - user_preference['ABV'])
+                    abv_score = 1 / (1 + abv_diff)  # 도수 차이가 작을수록 높은 점수
+                # 재료의 카테고리를 고려하는 후처리
+                category = self.get_ingredient_category(ingredient_name)
+                if category in ['Alcohol']:
+                    if user_preference['ABV'] > 0:
+                        if ingredient_abv > 32:
+                            if high_abv_count >= max_high_abv:
+                                probabilities[ingredient_id] *= 0.8  # 높은 도수 음료 제한
+                            else:
+                                high_abv_count += 1
+                    else:
+                        probabilities[ingredient_id] *= 0  # 높은 도수 음료 제한
+                    if base_ingredient_count >= max_base_ingredients:
+                        probabilities[ingredient_id] *= 0.5  # 베이스 술 개수 제한
+                    else:
+                        base_ingredient_count += 1
+                elif category in ['Mixer']:
+                    if high_abv_count >= max_high_abv:
+                        probabilities[ingredient_id] *= 1.5
+                elif category in ['Condiment'] and total_prob > 1.0:
+                    probabilities[ingredient_id] *= 1.5
+                probabilities[ingredient_id] *= ingredient_taste_score * abv_score
+
+            sum_prob = sum(probabilities)
+            normalized_prob = [prob / sum_prob for prob in probabilities]
+            next_ingredient_id = np.argmax(normalized_prob)
+
+            next_ingredient = list(self.ingredient_ids.keys())[list(self.ingredient_ids.values()).index(next_ingredient_id)]
+            generated_recipe.append(next_ingredient)
+            used_ingredients.add(next_ingredient)
+            print(f"next_ingredient : {next_ingredient}, total_prob : {total_prob} , normalized_prob[next_ingredient_id] : {normalized_prob[next_ingredient_id]}")
+            total_prob += normalized_prob[next_ingredient_id]
+
+        # 레시피 도수 계산 및 재료 양 조정
+        target_abv = user_preference['ABV']
+        quantities = self.adjust_ingredient_quantities(generated_recipe, target_abv, user_preference)
+        return generated_recipe, quantities
+
     def generate_recipe(self,model, seed_ingredient, user_preference, max_length=10):
         #TODO : 가니시 고려해야함 
         #TODO : 높은 도수의 음료는 한두가지로 제한해야함
