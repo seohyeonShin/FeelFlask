@@ -7,6 +7,7 @@ from CocktailEmbeddingMaker import Eval
 from typing import List, Dict
 import sys
 import traceback
+import random
 
 app = FastAPI()
 
@@ -143,12 +144,16 @@ async def filter(features: Features):
             count = 0
             seed = eval_obj.select_user_seed(user_profile)
             print(f"seed: {seed}")
+            #4대기주를 포함시킵니다.
+            base_liq = ['vodka','tequila','rum']
+            base = random.choice(base_liq)
+            top_10_ingredient.append(base)
             top_10_ingredient.append(seed)
             for ing_name, score in sorted_ingredient:             
                 if flavor_dic[ing_name]['ABV'] > 0 and ('Alcohol' in category_data[normalize_string(ing_name)]):
                     top_10_ingredient.append(ing_name)
                     count += 1
-                if count == 10:
+                if len(top_10_ingredient) == 10:
                     break
 
 
@@ -224,10 +229,10 @@ async def predict(features: Features):
             eval_obj.set_limited_ingredient(limited_ingredient_list)
             best_ingredient = eval_obj.find_similar_ingredients(generated_recipes[0],limited_ingredient_list,input_features)
             target_abv = input_features['ABV']
-            quantities = eval_obj.adjust_ingredient_quantities(best_ingredient, target_abv, input_features)
+            quantities = eval_obj.adjust_ingredient_quantities(best_ingredient, target_abv, input_features,total_amount=100)
             result_recipe_live = {}
             for recipe, ingredients in zip(best_ingredient, quantities):
-                result_recipe_live[recipe]= ingredients * total_amount
+                result_recipe_live[recipe]= ingredients * 100
         except Exception as e:
             print(traceback.format_exc())
             result_recipe_live = {}
