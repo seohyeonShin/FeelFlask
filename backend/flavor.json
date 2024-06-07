@@ -5812,5 +5812,22 @@
     "nutty": 0.0, 
     "creamy": 0.0,
     "smoky": 0.0  
-  }
-]
+}, {
+    "name": "anis",
+    "ABV": 40,
+    "boozy": 60,
+    "sweet": 75,
+    "sour": 5,
+    "bitter": 15,
+    "umami": 5,
+    "salty": 5,
+    "astringent": 15,
+    "Perceived_temperature": 20,
+    "spicy": 40,
+    "herbal": 85,
+    "floral": 20,
+    "fruity": 10,
+    "nutty": 5,
+    "creamy": 5,
+    "smoky": 5
+}]

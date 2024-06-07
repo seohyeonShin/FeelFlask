@@ -1,3 +1,5 @@
 *.ini
 __pycache__
 .devcontainer
+backend/data_works/wandb
+*.h5

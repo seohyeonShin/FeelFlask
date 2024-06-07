@@ -4,6 +4,7 @@ import random
 import tensorflow as tf
 import wandb
 import json
+import math
 class CocktailEmbeddingMaker:
     def __init__(self, json_data, flavor_data,category_data, total_amount=200):
         self.cocktail_info = json_data['cocktail_info']
@@ -12,9 +13,17 @@ class CocktailEmbeddingMaker:
         self.max_recipe_length=10
         self.category_data = category_data
         self.init()
-
+        self.ingredient_mapping=None
+        self.attributes = ['ABV', 'boozy', 'sweet', 'sour', 'bitter', 'umami', 'salty', 'astringent', 'Perceived_temperature', 'spicy', 'herbal', 'floral', 'fruity', 'nutty', 'creamy', 'smoky']
+    def set_ingredient_mapping(self):
+        with open('limited_item_dict.json', 'r') as f:
+            ingredient_mapping = json.load(f)
+        self.ingredient_mapping = ingredient_mapping
+    
     def normalize_string(self, name):
-        return name.replace('\\"', '"').replace("\\'", "'")
+        # return name.replace('\\"', '"').replace("\\'", "'")
+        # print(name)
+        return name
 
     def init(self):
         ingredient_ids = {}
@@ -26,7 +35,29 @@ class CocktailEmbeddingMaker:
         self.ingredient_ids = ingredient_ids
         self.num_ingredients = len(self.flavor_data)
         self.embedding_dim = 64
+        self.low_ing = []
+        self.middle_ing = []
+        self.high_ing = []
+        for ingredient in self.ingredient_ids.keys() :
+            if self.get_ingredient_category(ingredient) == 'Alcohol':
+                ingradient_abv= self.get_ingredient_abv(ingredient)
+                #낮은 도수의 재료
+                if ingradient_abv<=15:
+                    self.low_ing.append(ingredient)
+                #중간 도수의 재료
+                elif ingradient_abv>15 and ingradient_abv<30:
+                    self.middle_ing.append(ingredient)
+                #높은 도수의 재료
+                else:
+                    self.high_ing.append(ingredient)
 
+    def get_ingredient_abv(self, ingredient):
+        ingredient_info = next((item for item in self.flavor_data if item["name"] == ingredient), None)
+        return ingredient_info['ABV'] if ingredient_info else 0
+    
+    def get_ingredient_category(self,ingredient_name):
+        ingredient_category = self.category_data[ingredient_name][0]
+        return ingredient_category
     def create_ingredient_embedding_matrix(self):
         ingredient_embedding_matrix = np.zeros((self.num_ingredients, len(self.flavor_data[0]) - 1))
         
@@ -159,60 +190,82 @@ class Eval(CocktailEmbeddingMaker):
         super().__init__(json_data, flavor_data,category_data, total_amount=200)
         self.user_seed = None
         self.user_seed_len = 0
+        self.limited_ingredient_list=[]
+        self.limited_mode = False
+
     def set_user_seed(self,user_seed_ingredient):
         self.user_seed = user_seed_ingredient
         self.user_seed_len = len(user_seed_ingredient)
 
-    def select_user_seed(self, user_preference, max_base_spirits=2, max_mixers=2, max_condiments=1):
-        def select_ingredients(category, count, sort_key=None):
-            if self.user_seed is None:
-                ingredients = []
-            else:
-                ingredients = [ingredient for ingredient in self.user_seed if self.get_ingredient_category(ingredient) == category]
-            if len(ingredients) < count:
-                all_ingredients = [ingredient for ingredient in self.ingredient_ids.keys() if self.get_ingredient_category(ingredient) == category]
-                if sort_key:
-                    all_ingredients.sort(key=sort_key, reverse=True)
-                ingredients.extend(all_ingredients[:count - len(ingredients)])
-            else:
-                ingredients = ingredients[:count]
-            return ingredients
-
-        if self.user_seed is None:
-            self.user_seed = []
-
-        if user_preference['ABV'] > 0:
-            base_spirits = select_ingredients('Alcohol', max_base_spirits, lambda x: abs(self.get_ingredient_abv(x) - user_preference['ABV']))
-            self.user_seed = [spirit for spirit in self.user_seed if spirit in base_spirits]
+    def select_user_seed(self, user_preference):
+        if user_preference['ABV'] == 0:
+            #Mixer중에서 선택
+            user_seed = [ingredient for ingredient in self.ingredient_ids.keys() if self.get_ingredient_category(ingredient) == 'Mixer']
+            if self.limited_mode:
+                user_seed = [ingredient for ingredient in self.limited_ingredient_list if self.get_ingredient_category(ingredient) == 'Mixer' ]
+            judge = {}                
+            user_seed_list = list(set(user_seed))
+            for item in user_seed_list:
+                judge[item] = self.get_ingredient_taste_score(item, user_preference)
+            user_seed = max(judge, key=judge.get)    
         else:
-            self.user_seed = [ingredient for ingredient in self.user_seed if self.get_ingredient_category(ingredient) != 'Alcohol']
+            #Alcohol중에서 선택
+            if self.limited_mode:
+                judge = {} 
+                alcohol_list = [ingredient for ingredient in self.limited_ingredient_list if self.get_ingredient_category(ingredient) == 'Alcohol']
+                # print(f"alcohol_list:{alcohol_list}")
+                for item in alcohol_list:
+                    judge[item] = self.get_ingredient_taste_score(item, user_preference)
+                user_seed = max(judge, key=judge.get)
+            else:
+                user_seed_list=[]
+                if user_preference['ABV']<=10:
+                    user_seed_list.extend(random.choices(self.low_ing, k=3))
+                    user_seed_list.extend(random.choices(self.middle_ing, k=3))
+                    user_seed_list.extend(random.choices(self.high_ing, k=2))
+                elif user_preference['ABV']>10 and user_preference['ABV']<=30:
+                    user_seed_list.extend(random.choices(self.middle_ing, k=5))
+                    user_seed_list.extend(random.choices(self.high_ing, k=2))
+                else:
+                    user_seed_list.extend(random.choices(self.middle_ing, k=2))
+                    user_seed_list.extend(random.choices(self.high_ing, k=5))
+                judge = {}                
+                user_seed_list = list(set(user_seed_list))
+                for item in user_seed_list:
+                    judge[item] = self.get_ingredient_taste_score(item, user_preference)
+                user_seed = max(judge, key=judge.get)
+                # user_seed = random.choice(user_seed_list)
 
-        mixers = select_ingredients('Mixer', max_mixers, lambda x: self.get_ingredient_taste_score(x, user_preference))
-        condiments = select_ingredients('Condiment', max_condiments, lambda x: self.get_ingredient_taste_score(x, user_preference))
-
-        self.user_seed.extend(mixers)
-        self.user_seed.extend(condiments)
-        self.user_seed = list(set(self.user_seed))  # 중복 제거
-        self.user_seed_len = len(self.user_seed)
+        print(f"user_seed : {user_seed}")
+        return user_seed         
+                    
 
 
-    def evaluate_model(self,model, test_user_list, num_recipes=100):
+    def evaluate_model(self,model, test_user_list,wandb_flag, num_recipes=100):
         self.model = model
         similarity_list= []
         diversity_list = []
         abv_match_list = []
         taste_match_list = []
         recipe_profile_list=[]
+        recipe_ingredient_count_list = []
         for user in test_user_list:
             # def generate_recipe(self, seed_ingredient, user_preference, max_length=10):
             # seed_ingredient=random.choice(list(self.ingredient_ids.keys()))
             seed_ingredient = self.select_user_seed(user)
             # seed_ingredient = "vodka"#"lemon juice"
+            print(seed_ingredient)
             generated_recipes = self.generate_recipe(model,seed_ingredient,user)
             print(generated_recipes)
             print(json.dumps(user,indent=4))
             recipe_profile=self.get_taste_log(generated_recipes)
             recipe_profile_list.append(recipe_profile)
+            if wandb_flag:
+                wandb.log({f"generated_recipe_{user['user_id']}": generated_recipes})
+                ingredient_count = len(generated_recipes[0])
+                recipe_ingredient_count_list.append(ingredient_count)
+                wandb.log({f"ingredient_count_{user['user_id']}": ingredient_count})
+                
             s = self.evaluate_similarity(generated_recipes)
             d = self.evaluate_diversity(generated_recipes)
             a = self.evaluate_abv_match(generated_recipes, user)
@@ -227,17 +280,23 @@ class Eval(CocktailEmbeddingMaker):
         diversity = np.mean(diversity_list)
         abv_match = np.mean(abv_match_list)
         taste_match = np.mean(taste_match_list)
+        avg_ingredient_count = np.mean(recipe_ingredient_count_list)
+        if wandb_flag:
+            wandb.log({'avg_ingredient_count': avg_ingredient_count})
         evaluation_metrics = {
             'similarity': similarity,
             'diversity': diversity,
             'abv_match': abv_match,
-            'taste_match': taste_match
+            'taste_match': taste_match,
         }
         
         return evaluation_metrics,recipe_profile_list
-    def evaluate_similarity(self, generated_recipe):
-        
-        
+    def cosine_similarity(self,vector1, vector2):
+        dot_product = sum(a * b for a, b in zip(vector1, vector2))
+        vector1_norm = math.sqrt(sum(x ** 2 for x in vector1))
+        vector2_norm = math.sqrt(sum(x ** 2 for x in vector2))
+        return dot_product / (vector1_norm * vector2_norm)
+    def evaluate_similarity(self, generated_recipe):        
         recipe_dict = {}
         for item, quantity_ratio in zip(generated_recipe[0], generated_recipe[1]):
             recipe_dict[item] = quantity_ratio * self.total_amount
@@ -333,9 +392,7 @@ class Eval(CocktailEmbeddingMaker):
         #레시피의 맛 프로파일 생성
         recipe_taste = self.get_taste_info(recipe)
         return recipe_taste
-    def get_ingredient_category(self,ingredient_name):
-        ingredient_category = self.category_data[ingredient_name][0]
-        return ingredient_category
+
     
     def calculate_recipe_taste_score(self, recipe, quantities, user_preference):
         recipe_taste_score = 0
@@ -346,20 +403,92 @@ class Eval(CocktailEmbeddingMaker):
         recipe_taste_score /= len(recipe)  # 재료 개수로 나누어 평균 점수 계산
         return recipe_taste_score
     
+    def set_limited_ingredient(self, ingredient_list):
+        '''
+        소지 재료 입력
+        '''
+        self.limited_ingredient_list = ingredient_list
+        self.limited_mode = True
+        # print(f"limited_ingredient_list : {self.limited_ingredient_list}")
+        self.set_ingredient_mapping()
+
+    def calculate_taste_similarity(self, taste_profile, ingredient_taste_profile, user_preference):
+        similarity = 0
+        # print(f"taste_profile : {taste_profile} , ingredient_taste_profile : {ingredient_taste_profile} , user_preference : {user_preference}")
+        for taste, user_score in user_preference.items():
+            if taste != 'abv_min' and taste != 'abv_max' and taste != 'user_id':
+                recipe_score = taste_profile.get(taste, 0)
+                ingredient_score = ingredient_taste_profile.get(taste, 0)
+                similarity += abs(ingredient_score - recipe_score) * user_score / 100
+        return 1 - similarity
+
+    def get_ingredient_taste_profile(self, ingredient):
+        ingredient_info = next((item for item in self.flavor_data if item["name"] == ingredient), None)
+        if ingredient_info:
+            taste_profile = {taste: ingredient_info[taste] for taste in self.attributes if taste != "name"}
+            return taste_profile
+        else:
+            print(f"Ingredient '{ingredient}' not found in flavor_data")
+            return None
+        
+    def find_similar_ingredients(self, recipe_ingredients, available_ingredients, user_preference):
+        # 재료 매핑 처리
+        best_set = set()
+        non_mapped_recipe = []
+        for recipe_ingredient in recipe_ingredients:
+            if recipe_ingredient in self.ingredient_mapping:
+                mapped_ingredient = self.ingredient_mapping[recipe_ingredient]
+                if mapped_ingredient in available_ingredients:
+                    best_set.add(mapped_ingredient)
+                else:
+                    non_mapped_recipe.append(recipe_ingredient)
+            elif recipe_ingredient in available_ingredients:
+                best_set.add(recipe_ingredient)
+            else:
+                non_mapped_recipe.append(recipe_ingredient)
+
+        # print(f"recipe_ingredients: {recipe_ingredients}, best_set: {best_set}, non_mapped_recipe: {non_mapped_recipe}")
+
+        for item in non_mapped_recipe:
+            recipe_ingredient_profile = self.get_ingredient_taste_profile(item)
+            best_similarity = -500
+            best_replacement = None
+            for available_ingredient in available_ingredients:
+                if item != available_ingredient:
+                    available_ingredient_profile = self.get_ingredient_taste_profile(available_ingredient)
+                    taste_similarity = self.calculate_taste_similarity(recipe_ingredient_profile, available_ingredient_profile, user_preference)
+                    # print(f"item: {item}, available_ingredient: {available_ingredient}, taste_similarity: {taste_similarity}")
+                    if taste_similarity > best_similarity:
+                        best_similarity = taste_similarity
+                        best_replacement = available_ingredient
+                else:
+                    best_replacement = available_ingredient
+                    break
+            if best_replacement is None:
+                # print(f"best_replacement is None for item: {item}, available_ingredients: {available_ingredients}")
+                best_replacement = random.choice(available_ingredients)
+            best_set.add(best_replacement)
+        return best_set
+    
+
+    
+
     def generate_recipe(self,model, seed_ingredient, user_preference, max_length=10):
         #TODO : 가니시 고려해야함 
         #TODO : 높은 도수의 음료는 한두가지로 제한해야함
         self.model = model
         generated_recipe = [seed_ingredient]
-        generated_quantities = []
         high_abv_count = 0
-        max_high_abv = 2
+        
+        max_high_abv = 3
         total_prob = 0
-        max_prob_sum = 1.0
+        max_prob_sum = 1.5
         while total_prob < max_prob_sum:
-            sequence = [self.ingredient_ids[self.normalize_string(ingredient)] for ingredient in generated_recipe]
-            sequence = tf.keras.preprocessing.sequence.pad_sequences([sequence], maxlen=self.max_recipe_length)
-
+            try:
+                sequence = [self.ingredient_ids[self.normalize_string(ingredient)] for ingredient in generated_recipe]
+                sequence = tf.keras.preprocessing.sequence.pad_sequences([sequence], maxlen=self.max_recipe_length)
+            except Exception as e:
+                print(f"generated_recipe : {generated_recipe}")
             probabilities = self.model.predict(sequence)[0]
             probabilities[sequence[0]] = 0  # 중복 재료 제거
             
@@ -377,17 +506,16 @@ class Eval(CocktailEmbeddingMaker):
                 category = self.get_ingredient_category(ingredient_name)
                 if user_preference['ABV']>0:
                     #도수가 있는 것을 선호할때
-                    if category in ['Alcohol']:
+                    if category in ['Alcohol'] and ingredient_abv>32:
                         if high_abv_count >= max_high_abv:
-                            probabilities[ingredient_id] *= 0.1  # 높은 도수 음료 제한
+                            probabilities[ingredient_id] *= 0.8  # 높은 도수 음료 제한
                         else:
                             high_abv_count += 1
-                            probabilities[ingredient_id] *= 2.5
                     elif category in ['Mixer']:
                         if high_abv_count >= max_high_abv:
-                            probabilities[ingredient_id] *= 2.5
+                            probabilities[ingredient_id] *= 1.5
                     elif category in ['Condiment'] and total_prob>1.0:
-                        probabilities[ingredient_id] *= 2.5
+                        probabilities[ingredient_id] *= 1.5
                 else:
                     if category in ['Alcohol']:
                         probabilities[ingredient_id] *= 0  # 높은 도수 음료 제한
@@ -406,7 +534,7 @@ class Eval(CocktailEmbeddingMaker):
 
             next_ingredient = list(self.ingredient_ids.keys())[list(self.ingredient_ids.values()).index(next_ingredient_id)]
             generated_recipe.append(next_ingredient)
-            print(f"next_ingredient : {next_ingredient}, total_prob : {total_prob} , normalized_prob[next_ingredient_id] : {normalized_prob[next_ingredient_id]}")
+            # print(f"next_ingredient : {next_ingredient}, total_prob : {total_prob} , normalized_prob[next_ingredient_id] : {normalized_prob[next_ingredient_id]}")
             total_prob += normalized_prob[next_ingredient_id]
             if len(generated_recipe)>=max_length:
                 break
@@ -500,9 +628,7 @@ class Eval(CocktailEmbeddingMaker):
 
         return quantities
     
-    def get_ingredient_abv(self, ingredient):
-        ingredient_info = next((item for item in self.flavor_data if item["name"] == ingredient), None)
-        return ingredient_info['ABV'] if ingredient_info else 0
+
 
     def get_ingredient_taste_score(self, ingredient_name, user_preference):
         ingredient_info = next((item for item in self.flavor_data if item["name"] == ingredient_name), None)
@@ -532,7 +658,7 @@ class Eval(CocktailEmbeddingMaker):
 
             return weighted_score
         else:
-            print(f"there is no ingredient!:{ingredient_info}")
+            print(f"[ingredient_name]there is no ingredient!:{ingredient_name}")
             return 0.0  # 재료 정보가 없는 경우 0 반환
     def generate_random_user_list(self,num_users):
         user_list = []
