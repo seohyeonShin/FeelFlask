@@ -5,11 +5,13 @@ import tensorflow as tf
 import json
 from CocktailEmbeddingMaker import Eval
 from typing import List, Dict
-
+import sys
+import traceback
 
 app = FastAPI()
 
-model = tf.keras.models.load_model('testmodel.h5')
+# model = tf.keras.models.load_model('testmodel.h5')
+model = tf.keras.models.load_model('best_model_earthy.h5')
 
 with open('./train_data.json', 'r') as f:
     json_data = json.load(f)
@@ -23,6 +25,8 @@ with open('./ingredients_description.json', 'r') as f:
 with open('./category.json', 'r') as f:
     category_data = json.load(f)
 
+total_amount = 200 #ml
+eval_obj = Eval(json_data, flavor_data, category_data, total_amount)
 
 class Features(BaseModel):
     ABV: float
@@ -46,13 +50,14 @@ class Features(BaseModel):
 class Recipe(BaseModel):
     recipe: Dict[str, float]
     profile: Dict[str, float]
-
+    live_recipe: Dict[str, float]
 class FilteredIngredients(BaseModel):
     ingredients: List[str]
     flavor: Dict[str, Dict[str, float]]
     description: Dict[str, Dict[str, str]]
 
-
+def normalize_string(name):
+    return name.replace('\\"', '"').replace("\\'", "'")
 # 사용자의 profile을 입력으로, 가장 값이 높은 feature 3개를 뽑습니다.
 # 해당 feature들과 가장 유사한 값을 가지는 ingredient를 여러개 뽑아 list로 반환합니다.
 @app.post("/filter", response_model=FilteredIngredients)
@@ -72,7 +77,6 @@ async def filter(features: Features):
         for ingredient in ingredients_description:
             element = {"description": ingredient['description']}
             description_dic[ingredient['name'].lower()] = element
-
 
         user_profile = {'ABV': features.ABV,
                           'sweet' : features.sweet,
@@ -137,12 +141,17 @@ async def filter(features: Features):
         else:
             # ABV값이 0 이상이고, Alcohol 카테고리에 속하는 재료를 선정합니다.
             count = 0
-            for ing_name, score in sorted_ingredient:
-                if flavor_dic[ing_name]['ABV'] > 0 and ('Alcohol' in category_data[ing_name]):
+            seed = eval_obj.select_user_seed(user_profile)
+            print(f"seed: {seed}")
+            top_10_ingredient.append(seed)
+            for ing_name, score in sorted_ingredient:             
+                if flavor_dic[ing_name]['ABV'] > 0 and ('Alcohol' in category_data[normalize_string(ing_name)]):
                     top_10_ingredient.append(ing_name)
                     count += 1
                 if count == 10:
                     break
+
+
 
         top_10_flavor = {}
         top_10_description = {}
@@ -162,10 +171,12 @@ async def filter(features: Features):
                 "description" : top_10_description}
 
     except Exception as e:
+        _, _ , tb = sys.exc_info()    # tb  ->  traceback object
+        print('file name = ', __file__)
+        print('error line No = {}'.format(tb.tb_lineno))
+
         raise HTTPException(status_code=500, detail=str(e))
 
-# 모델에 user profile과 seed ingredient를 입력으로 받고, inference를 수행합니다.
-# inference를 수행하고 나온 결과를 전달합니다.
 @app.post("/predict", response_model=Recipe)
 async def predict(features: Features):
     # Extract input features
@@ -189,21 +200,40 @@ async def predict(features: Features):
                           'smoky' : features.smoky,
                           }
         seed_ingredient = features.seed
-        total_amount = 200 #ml
-        eval_obj = Eval(json_data, flavor_data, category_data, model, total_amount)
 
+        print(f"eval init")
         recipe_length = 5
-        generated_recipes = eval_obj.generate_recipe(seed_ingredient, input_features, recipe_length)
-        result_recipe = {}
 
+        generated_recipes = eval_obj.generate_recipe(model,seed_ingredient, input_features, recipe_length)
+        result_recipe = {}
+        print(f"generated_recipes: {generated_recipes}")
 
         for recipe, ingredients in zip(generated_recipes[0], generated_recipes[1]):
             result_recipe[recipe]= ingredients * total_amount
 
         user_recipe_profile = eval_obj.get_taste_log(generated_recipes)
-
+        
+        
+        #Live Demo
+        try:
+            limited_ingredient_list= [  'peach schnapps','baileys irish cream','kahlua','triple sec','malibu rum','tequila',
+                                'whisky','jack daniels','malibu rum','midori melon liqueur','vodka','light rum',
+                                "cranberry juice","lime juice",'lemon juice',"orange juice","tonic water", "milk",'sugar syrup',
+                                'powdered sugar','salt','sugar','ice','cinnamon','black pepper','grenadine','carbonated water'
+                                ]
+            eval_obj.set_limited_ingredient(limited_ingredient_list)
+            best_ingredient = eval_obj.find_similar_ingredients(generated_recipes[0],limited_ingredient_list,input_features)
+            target_abv = input_features['ABV']
+            quantities = eval_obj.adjust_ingredient_quantities(best_ingredient, target_abv, input_features)
+            result_recipe_live = {}
+            for recipe, ingredients in zip(best_ingredient, quantities):
+                result_recipe_live[recipe]= ingredients * total_amount
+        except Exception as e:
+            print(traceback.format_exc())
+            result_recipe_live = {}
         return {"recipe" : result_recipe,
-                "profile" : user_recipe_profile}
+                "profile" : user_recipe_profile,
+                "live_recipe":result_recipe_live}
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

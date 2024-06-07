@@ -42,6 +42,7 @@ def filter_feature(feature_dic):
                 feature_dic[key] = float(100)
             elif feature_dic[key] < 0:
                 feature_dic[key] = float(0)
+    print("Filtered Feature: ", feature_dic)
     return feature_dic
 
 
@@ -818,7 +819,7 @@ def show_loading_page():
     time.sleep(random.uniform(0.5, 2))
 
     main_features = st.session_state.main_feature_values
-    print("!!!!!!!!!!", main_features)
+    print("!!!![st.session_state.main_feature_values]!!!!!!", main_features)
 
     # response -> (recipe: result_recipe, profile: user_recipe_profile)인 딕셔너리임
     response = requests.post('http://localhost:8000/predict', json=main_features)
@@ -852,7 +853,7 @@ def show_recommendation(prediction, cocktail_animations):
     animation_height = base_height + (num_ingredients * additional_height_per_ingredient)
 
     # Create tabs
-    tab1, tab2 = st.tabs(["Details", "Graphs"])
+    tab1, tab2 , tab3 = st.tabs(["Details", "Graphs","Live Bar"])
 
     with tab1:
         col1, col2 = st.columns(2)
@@ -870,6 +871,22 @@ def show_recommendation(prediction, cocktail_animations):
                 st.write(f"- {ingredient}: {round(amount, 2)}ml")
             st.markdown("</div>", unsafe_allow_html=True)
 
+    with tab3:
+        col1, col2 = st.columns(2)
+
+        with col1:
+            # cocktail_animations = random.choice(cocktail_animations)
+            st_lottie(cocktail_animations, height=animation_height, key="cocktail_animation_2")
+            # # Display image
+            # st.image(cocktail['image_path'], width=300)
+
+        with col2:
+            st.markdown("<div style='text-align: center;'>", unsafe_allow_html=True)
+            st.write("**Recommend Recipe:**")
+            print(prediction.keys())
+            for ingredient, amount in prediction['live_recipe'].items():
+                st.write(f"- {ingredient}: {round(amount, 2)}ml")
+            st.markdown("</div>", unsafe_allow_html=True)
     with tab2:
         col3, col4 = st.columns(2)
 
