@@ -570,7 +570,7 @@
     "smoky": 0.0
   },
   {
-    "name": "a\u00f1ejo rum",
+    "name": "anejo rum",
     "ABV": 40.0,
     "boozy": 80.0,
     "sweet": 20.0,
@@ -3192,7 +3192,7 @@
     "smoky": 10.0
   },
   {
-    "name": "j\u00e4germeister",
+    "name": "jagermeister",
     "ABV": 35.0,
     "boozy": 60.0,
     "sweet": 50.0,
@@ -5812,5 +5812,22 @@
     "nutty": 0.0, 
     "creamy": 0.0,
     "smoky": 0.0  
-  }
-]
+}, {
+    "name": "anis",
+    "ABV": 40,
+    "boozy": 60,
+    "sweet": 75,
+    "sour": 5,
+    "bitter": 15,
+    "umami": 5,
+    "salty": 5,
+    "astringent": 15,
+    "Perceived_temperature": 20,
+    "spicy": 40,
+    "herbal": 85,
+    "floral": 20,
+    "fruity": 10,
+    "nutty": 5,
+    "creamy": 5,
+    "smoky": 5
+}]
