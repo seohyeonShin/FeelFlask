@@ -13,9 +13,9 @@ from streamlit_lottie import st_lottie
 from streamlit_star_rating import st_star_rating
 
 def restart_btn():
-    col1, col2, col3 = st.columns([3, 1, 3])
+    col1, col2, col3 = st.columns([50, 14, 50])
     with col2:
-        if st.button("Restart", key="restart", type='primary'):
+        if st.button("Restart", key="restart", type='secondary'):
             initialize_state()
             st.rerun()
 
@@ -94,9 +94,9 @@ def handle_welcome_page(welcome_animations):
     )
 
     # Center the button using columns
-    col1, col2, col3 = st.columns([3, 2, 3])
+    col1, col2, col3 = st.columns([5, 3, 5])
     with col2:
-        if st.button("Start Your Journey"):
+        if st.button("Start Your Journey", key="start", type='primary'):
             next_page()
 
 # Alcoholic인지, Non-Alcoholic인지 선택하는 페이지를 보여주는 함수
@@ -109,7 +109,7 @@ def handle_drink_type_page():
         background-color: #ffb6c1; /* 파스텔 핑크 */
         color: white;
         font-size: 50;
-        padding: 70px; /* 위아래로 길게 */
+        padding: 20px;
         border: none;
         border-radius: 50px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -128,7 +128,7 @@ def handle_drink_type_page():
         background-color: #c5e1a5; /* 파스텔 연두 */
         color: white;
         font-size: 50;
-        padding: 70px; /* 위아래로 길게 */
+        padding: 70px;
         border: none;
         border-radius: 50px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -179,14 +179,8 @@ def handle_drink_type_page():
         ):
             st.session_state.drink_type = "Non_Alcoholic"
             next_page()
-
-    for i in range(10):
-      col1, col2, col3 = st.columns([3, 1, 3])
     
-    with col2:
-        if st.button("Restart", key="restart"):
-            initialize_state()
-            st.rerun()
+    restart_btn()
 
 
 # 여러 음식 아이콘을 보여주고, feature들을 입력받는 함수입니다.
@@ -554,8 +548,8 @@ def handle_input_by_images(drinktype):
     st.pyplot(fig1)
 
 
-    # Get Recipe 버튼을 누르면 다음 페이지로 넘어가며, update된 feature dictionary를 업데이트 합니다.
-    if st.button("Get Recipe", type='primary'):
+    # Set My Taste 버튼을 누르면 다음 페이지로 넘어가며, update된 feature dictionary를 업데이트 합니다.
+    if st.button("Set My Taste", type='primary', use_container_width=True):
         selection_list = st.session_state.choice
         print("Choice: ", selection_list)
         # Perceived_temperature, boozy, astringent는 제외하였습니다. 해당 feature들은 랜덤하거나, ABV, bitter 값에 따라 조절됩니다.
@@ -638,8 +632,8 @@ def handle_input_seed_ingredient(loading_animations):
             border-radius: 50px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             transition: all 0.2s ease;
-            width: 200px;
-            height: 200px;
+            width: 220px;
+            height: 220px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -658,8 +652,8 @@ def handle_input_seed_ingredient(loading_animations):
             border-radius: 10px;W
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             transition: all 0.2s ease;
-            width: 200px;
-            height: 200px;
+            width: 220px;
+            height: 220px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -777,10 +771,13 @@ def handle_input_seed_ingredient(loading_animations):
         "Determine",
         key="determine_choice",
         help="Determine the seed ingredient",
-        use_container_width=True
+        use_container_width=True,
+        type='primary'
     ):
         print("main_feature_values: ", st.session_state.main_feature_values)
         main_features = st.session_state.main_feature_values
+        if st.session_state.selected_ingredient == "":
+            main_features['seed'] = random.choice(seed_ingredient_list['ingredients'])
         # main_features['seed'] = st.session_state.selected_ingredient
         st.session_state.loading_animation = random.choice(loading_animations)
         st.session_state.main_feature_values = main_features
@@ -848,11 +845,21 @@ def show_recommendation(prediction, cocktail_animations):
         """,
         unsafe_allow_html=True
     )
-
+    st.markdown("""
+        <style>
+        .centered-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        </style>
+        """, unsafe_allow_html=True)
+    
     # Calculate the height for the animation
     num_ingredients = len(prediction['recipe'])
     base_height = 250
-    additional_height_per_ingredient = 50
+    additional_height_per_ingredient = 25
     animation_height = base_height + (num_ingredients * additional_height_per_ingredient)
 
     if "cocktail_animation" not in st.session_state:
@@ -870,8 +877,7 @@ def show_recommendation(prediction, cocktail_animations):
             # st.image(cocktail['image_path'], width=300)
 
         with col2:
-            st.markdown("<div style='text-align: center;'>", unsafe_allow_html=True)
-            st.write("**Recommend Recipe:**")
+            st.markdown("<div class='centered-title'>Recommend Recipe:</div>", unsafe_allow_html=True)
             for ingredient, amount in prediction['recipe'].items():
                 st.write(f"- {ingredient}: {round(amount, 2)}ml")
             st.markdown("</div>", unsafe_allow_html=True)
@@ -885,8 +891,7 @@ def show_recommendation(prediction, cocktail_animations):
             # st.image(cocktail['image_path'], width=300)
 
         with col2:
-            st.markdown("<div style='text-align: center;'>", unsafe_allow_html=True)
-            st.write("**Recommend Recipe:**")
+            st.markdown("<div class='centered-title'>Recommend Recipe:</div>", unsafe_allow_html=True)
             print(prediction.keys())
             for ingredient, amount in prediction['live_recipe'].items():
                 st.write(f"- {ingredient}: {round(amount, 2)}ml")
