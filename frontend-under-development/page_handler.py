@@ -66,7 +66,8 @@ def initialize_state():
     st.session_state.loading_animation = None
     st.session_state.feedback_ratings = 0
     st.session_state.is_submit = False
-    st.session_state.selected_ingredient = None
+    st.session_state.selected_ingredient = ""
+    st.session_state.selected_index = -1
     st.session_state.choice_state = np.array([50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50])
 
 
@@ -684,31 +685,36 @@ def handle_input_seed_ingredient(loading_animations):
         unsafe_allow_html=True
     )
     # initialize seed ingredient (should be in string value)
-    seed_ingredient = ""
+    if "selected_ingredient" not in st.session_state:
+        st.session_state.selected_ingredient = ""
+    if "selected_index" not in st.session_state:
+        st.session_state.selected_index = -1
 
     main_features = st.session_state.main_feature_values
     main_features['astringent'] = main_features['bitter'] * 0.9
     main_features['boozy'] = main_features['ABV'] * 0.9
     main_features['perceived_t'] = random.uniform(0.3, 0.5)*100
-    main_features['seed'] = seed_ingredient # None value for initial seed ingredient
+    main_features['seed'] = st.session_state.selected_ingredient # None value for initial seed ingredient
 
     # feature value should be no bigger than 100 and no less tham 0
     st.session_state.main_feature_values = filter_feature(main_features)
 
     # filter로 요청하면, profile의 feature값과 차이가 적은 재료 top 10개를 불러와서 선택하도록 합니다.
     # 이때, 각 재료의 특성 값이 그래프로 나타나도록 합니다.
-    response = requests.post('http://localhost:8000/filter', json=st.session_state.main_feature_values)
+    response = requests.post(
+        'http://localhost:8000/filter',
+        json={
+            "features": st.session_state.main_feature_values,
+            "selected_ingredient": st.session_state.selected_ingredient,
+            "selected_index": st.session_state.selected_index
+        }
+    )
 
     if response.status_code == 200:
         seed_ingredient_list = response.json()
-        if "selected_ingredient" not in st.session_state:
-            st.session_state.selected_ingredient = seed_ingredient_list['ingredients'][9]   # Top 10중에 10번째 재료로 초기화
-        elif st.session_state.selected_ingredient is None:
-            st.session_state.selected_ingredient = seed_ingredient_list['ingredients'][9]
     else:
         st.write("Failed to get a filtered ingredient list. Please try again later.")
         
-
     # Button 형태로 변환 3x3
     st.markdown("Choose your seed ingredients:")
     for i in range(0, len(seed_ingredient_list['ingredients'])//3 * 3, 3):
@@ -727,7 +733,7 @@ def handle_input_seed_ingredient(loading_animations):
                         key=f"ingredient_button_{i + j}",
                         help=f"{seed_ingredient_list['description'][ingredient]['description']}",  # 재료에 대한 설명
                         use_container_width=True,
-                        on_click=lambda ingredient=ingredient: st.session_state.update(selected_ingredient=ingredient)
+                        on_click=lambda ingredient=ingredient, index=i+j: st.session_state.update(selected_ingredient=ingredient, selected_index=index)
                     ):
                         pass
 
@@ -766,7 +772,7 @@ def handle_input_seed_ingredient(loading_animations):
 
             # Add a title
             st.pyplot(fig)
-
+    
     if st.button(
         "Determine",
         key="determine_choice",
@@ -775,13 +781,12 @@ def handle_input_seed_ingredient(loading_animations):
     ):
         print("main_feature_values: ", st.session_state.main_feature_values)
         main_features = st.session_state.main_feature_values
-        main_features['seed'] = seed_ingredient
+        # main_features['seed'] = st.session_state.selected_ingredient
         st.session_state.loading_animation = random.choice(loading_animations)
         st.session_state.main_feature_values = main_features
         next_page()
 
-    for i in range(3):
-      col1, col2, col3 = st.columns([3, 1, 3])
+    col1, col2, col3 = st.columns([3, 1, 3])
 
     with col2:
         if st.button("Restart", key="restart"):
@@ -850,6 +855,9 @@ def show_recommendation(prediction, cocktail_animations):
     additional_height_per_ingredient = 50
     animation_height = base_height + (num_ingredients * additional_height_per_ingredient)
 
+    if "cocktail_animation" not in st.session_state:
+        st.session_state.cocktail_animation = random.choice(cocktail_animations)
+
     # Create tabs
     tab1, tab2 , tab3 = st.tabs(["Details", "Graphs","Live Bar"])
 
@@ -857,8 +865,7 @@ def show_recommendation(prediction, cocktail_animations):
         col1, col2 = st.columns(2)
 
         with col1:
-            cocktail_animations = random.choice(cocktail_animations)
-            st_lottie(cocktail_animations, height=animation_height, key="cocktail_animation")
+            st_lottie(st.session_state.cocktail_animation, height=animation_height, key="cocktail_animation")
             # # Display image
             # st.image(cocktail['image_path'], width=300)
 
@@ -873,8 +880,7 @@ def show_recommendation(prediction, cocktail_animations):
         col1, col2 = st.columns(2)
 
         with col1:
-            # cocktail_animations = random.choice(cocktail_animations)
-            st_lottie(cocktail_animations, height=animation_height, key="cocktail_animation_2")
+            st_lottie(st.session_state.cocktail_animation, height=animation_height, key="cocktail_animation_2")
             # # Display image
             # st.image(cocktail['image_path'], width=300)
 
