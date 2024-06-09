@@ -726,14 +726,12 @@ def handle_input_seed_ingredient(loading_animations):
                         ingredient,
                         key=f"ingredient_button_{i + j}",
                         help=f"{seed_ingredient_list['description'][ingredient]['description']}",  # 재료에 대한 설명
-                        use_container_width=True
+                        use_container_width=True,
+                        on_click=lambda ingredient=ingredient: st.session_state.update(selected_ingredient=ingredient)
                     ):
-                        st.session_state.selected_ingredient = ingredient
-                        st.rerun()
+                        pass
 
-    seed_ingredient = st.session_state.selected_ingredient
-    selected_flavor = seed_ingredient_list['flavor'][seed_ingredient]
-
+    selected_flavor = seed_ingredient_list['flavor'].get(st.session_state.selected_ingredient, {})
     # 맛 그래프 표시
     if selected_flavor:
         col1, col2, col3 = st.columns([1, 30, 1])
