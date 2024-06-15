@@ -7,7 +7,7 @@ import numpy as np
 
 import os
 print("Current working directory:", os.getcwd())
-
+st.text("Current working directory: " + os.getcwd())
 # Load Lottie animations
 welcome_animations = load_lottie_files("lottie_files/welcome ({}).json", 1, 10)
 loading_animations = load_lottie_files("lottie_files/loading ({}).json", 1, 10)
