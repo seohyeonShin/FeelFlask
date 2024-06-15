@@ -1,6 +1,7 @@
 import streamlit as st
 import json
 import numpy as np
+import os
 
 def initialize_session_state():
     # 페이지 업데이트 구분용
@@ -54,5 +55,8 @@ def load_lottie_files(pattern, start, end):
     return files
 
 def load_lottiefile(filepath):
-    with open(filepath, "r") as f:
+    base_path = os.path.dirname(__file__)  # 현재 파일의 디렉토리를 가져옵니다.
+    full_path = os.path.join(base_path, filepath)
+    print(full_path)
+    with open(full_path, "r") as f:
         return json.load(f)
