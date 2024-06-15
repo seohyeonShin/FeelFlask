@@ -5,6 +5,8 @@ from page_handler import *
 import json
 import numpy as np
 
+import os
+print("Current working directory:", os.getcwd())
 
 # Load Lottie animations
 welcome_animations = load_lottie_files("lottie_files/welcome ({}).json", 1, 10)
