@@ -77,6 +77,8 @@ setuptools==69.5.1
 six==1.16.0
 smmap==5.0.1
 streamlit==1.35.0
+streamlit-lottie==0.0.5
+st-star-rating==0.0.6
 tensorboard==2.16.2
 tensorflow==2.16.1
 termcolor==2.4.0
