@@ -11,6 +11,8 @@ from pathlib import Path
 import json
 from streamlit_lottie import st_lottie
 from streamlit_star_rating import st_star_rating
+import os
+
 
 def restart_btn():
     col1, col2, col3 = st.columns([50, 14, 50])
@@ -228,7 +230,8 @@ def handle_input_by_images(drinktype):
                        'lavender', 'lemon', 'lime', 'milk', 'mint', 'orange',
                        'pepper', 'pepper_hot', 'pistachio', 'pretzel', 'rose',
                        'salt']
-    base_path = './ingredient_image/'
+    file_path = os.path.dirname(os.path.abspath(__file__))  # 현재 파일의 절대 경로를 기준으로 디렉토리 경로를 구합니다.
+    base_path = os.path.join(file_path,'./ingredient_image/')
     img_path_list = []
     for png in png_list:
         img_path_list.append(base_path + png + '.png')
