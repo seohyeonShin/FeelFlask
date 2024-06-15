@@ -12,8 +12,9 @@ st.text("Current working directory: " + os.getcwd())
 welcome_animations = load_lottie_files("lottie_files/welcome ({}).json", 1, 10)
 loading_animations = load_lottie_files("lottie_files/loading ({}).json", 1, 10)
 cocktail_animations = load_lottie_files("lottie_files/cocktail ({}).json", 1, 41)
-
-with open('./flavor_update.json', 'r') as fr:
+base_path = os.path.dirname(os.path.abspath(__file__))  # 현재 파일의 절대 경로를 기준으로 디렉토리 경로를 구합니다.
+flavor_update_file_path = os.path.join(base_path, 'flavor_update.json') 
+with open(flavor_update_file_path, 'r') as fr:
     flavor_info = json.load(fr)
 
 # Initialize session state
