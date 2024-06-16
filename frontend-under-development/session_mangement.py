@@ -57,6 +57,6 @@ def load_lottie_files(pattern, start, end):
 def load_lottiefile(filepath):
     base_path = os.path.dirname(__file__)  # 현재 파일의 디렉토리를 가져옵니다.
     full_path = os.path.join(base_path, filepath)
-    print(full_path)
+    
     with open(full_path, "r") as f:
         return json.load(f)
