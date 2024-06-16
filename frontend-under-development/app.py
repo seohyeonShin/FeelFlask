@@ -9,8 +9,10 @@ import atexit
 from fastapi_srv import app as fastapi_app
 import socket
 import os
+import requests
 print("Current working directory:", os.getcwd())
-
+#FAST API SERVER
+FASTAPI_SERVER_URL='https://feel-flask-heroku-36cfaad15d5b.herokuapp.com/'
 
 # Load Lottie animations
 welcome_animations = load_lottie_files("lottie_files/welcome ({}).json", 1, 10)
@@ -32,9 +34,9 @@ elif st.session_state.page == 1:
 elif st.session_state.page == 2:
     handle_input_by_images(st.session_state.drink_type)
 elif st.session_state.page == 3:
-    handle_input_seed_ingredient(loading_animations)
+    handle_input_seed_ingredient(loading_animations,FASTAPI_SERVER_URL)
 elif st.session_state.page == 4:
-    show_loading_page()
+    show_loading_page(FASTAPI_SERVER_URL)
 elif st.session_state.page == 5:
     if 'prediction_result' in st.session_state:
         show_recommendation(st.session_state.prediction_result,
