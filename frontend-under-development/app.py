@@ -3,13 +3,9 @@ from streamlit_lottie import st_lottie
 from session_mangement import initialize_session_state, load_lottie_files, load_lottiefile
 from page_handler import *
 import json
-import numpy as np
-import subprocess
-import atexit
-from fastapi_srv import app as fastapi_app
-import socket
+
 import os
-import requests
+
 print("Current working directory:", os.getcwd())
 #FAST API SERVER
 FASTAPI_SERVER_URL='https://feel-flask-heroku-36cfaad15d5b.herokuapp.com/'
