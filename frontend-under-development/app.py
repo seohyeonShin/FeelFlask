@@ -56,6 +56,6 @@ def main():
 # def push_data(inputs, pred_ingredients, pred_amounts, feedback):
 
 if __name__ == "__main__":
-    start_fastapi()
-    atexit.register(stop_fastapi)
+    # start_fastapi()
+    # atexit.register(stop_fastapi)
     main()
